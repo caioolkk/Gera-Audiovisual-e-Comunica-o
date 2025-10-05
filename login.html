@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - GERA Audiovisual e Comunicação</title>
+  <meta name="description" content="Faça login na GERA Audiovisual e Comunicação.">
+  <meta name="keywords" content="GERA, login, cadastro, acesso, admin">
+  <meta name="author" content="GERA Audiovisual e Comunicação">
+  <link rel="icon" href="https://via.placeholder.com/32x32?text=GERA" type="image/png">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --amarelo: #FFD700;
+      --laranja: #FF8C00;
+      --vermelho: #fc520f;
+      --branco: #FFFFFF;
+      --preto: #000000;
+      --cinza-claro: #f9f9f9;
+    }
+
+    /* === CORREÇÃO DO FOOTER === */
+    html, body {
+      height: 100%;
+    }
+    .page-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .card {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    footer {
+      margin-top: auto;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--amarelo), var(--laranja));
+    }
+    .card-inner {
+      background: var(--branco);
+      padding: 40px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--preto);
+    }
+    .logo span { color: var(--vermelho); }
+    .tabs {
+      display: flex;
+      margin-bottom: 24px;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      border-bottom: 3px solid transparent;
+    }
+    .tab.active {
+      border-bottom-color: var(--laranja);
+      color: var(--laranja);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--laranja);
+      color: var(--branco);
+      border: none;
+      border-radius: 6px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn:hover { background: var(--vermelho); }
+    .social-login {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .social-btn {
+      display: inline-block;
+      margin: 8px;
+      padding: 10px 20px;
+      background: #eee;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: var(--laranja);
+      font-weight: bold;
+    }
+    .message {
+      text-align: center;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .error { background: #ffebee; color: var(--vermelho); }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="card">
+      <div class="card-inner">
+        <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
+
+        <div class="tabs">
+          <div class="tab active" data-tab="login">Login</div>
+          <div class="tab" data-tab="register">Cadastro</div>
+        </div>
+
+        <div id="message"></div>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email">E-mail</label>
+            <input type="email" id="login-email" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Senha</label>
+            <input type="password" id="login-password" required>
+          </div>
+          <button type="submit" class="btn">Entrar</button>
+          <div class="social-login">
+            <div class="social-btn">Google</div>
+            <div class="social-btn">Facebook</div>
+          </div>
+        </form>
+
+        <form id="register-form" style="display: none;">
+          <div class="form-group">
+            <label for="register-email">E-mail</label>
+            <input type="email" id="register-email" required>
+          </div>
+          <div class="form-group">
+            <label for="register-password">Senha</label>
+            <input type="password" id="register-password" required>
+          </div>
+          <div class="form-group">
+            <label for="register-confirm">Confirmar Senha</label>
+            <input type="password" id="register-confirm" required>
+          </div>
+          <button type="submit" class="btn">Cadastrar</button>
+        </form>
+
+        <a href="index.html" class="back-link">← Voltar para o portal</a>
+      </div>
+    </div>
+
+    <footer>
+      &copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.
+    </footer>
+  </div>
+
+  <script>
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('login-form').style.display = tab.dataset.tab === 'login' ? 'block' : 'none';
+        document.getElementById('register-form').style.display = tab.dataset.tab === 'register' ? 'block' : 'none';
+        document.getElementById('message').innerHTML = '';
+      });
+    });
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('message');
+      const data = {
+        email: document.getElementById('login-email').value,
+        password: document.getElementById('login-password').value
+      };
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        if (res.ok && result.success) {
+          localStorage.setItem('authToken', result.token);
+          if (result.isAdmin) {
+            window.location.href = '../admin/index.html';
+          } else {
+            window.location.href = 'index.html';
+          }
+        } else {
+          msg.innerHTML = `<div class="message error">${result.error || 'Credenciais inválidas.'}</div>`;
+        }
+      } catch (err) {
+        msg.innerHTML = '<div class="message error">Erro de conexão.</div>';
+      }
+    });
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('message');
+      const pass1 = document.getElementById('register-password').value;
+      const pass2 = document.getElementById('register-confirm').value;
+      
+      if (pass1 !== pass2) {
+        msg.innerHTML = '<div class="message error">As senhas não coincidem.</div>';
+        return;
+      }
+
+      const data = {
+        email: document.getElementById('register-email').value,
+        password: pass1
+      };
+
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        if (res.ok && result.success) {
+          msg.innerHTML = '<div class="message" style="background:#e8f5e9;color:#2e7d32;">Cadastro realizado! Faça login.</div>';
+          document.querySelector('.tab[data-tab="login"]').click();
+        } else {
+          msg.innerHTML = `<div class="message error">${result.error || 'Erro ao cadastrar.'}</div>`;
+        }
+      } catch (err) {
+        msg.innerHTML = '<div class="message error">Erro de conexão.</div>';
+      }
+    });
+  </script>
+</body>
+</html>

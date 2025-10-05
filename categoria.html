@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Categoria - GERA Audiovisual e Comunicação</title>
+  <meta name="description" content="Notícias por categoria da GERA Audiovisual e Comunicação.">
+  <meta name="keywords" content="GERA, categoria, notícias, cultura, política, eventos">
+  <meta name="author" content="GERA Audiovisual e Comunicação">
+  <link rel="icon" href="https://via.placeholder.com/32x32?text=GERA" type="image/png">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --amarelo: #FFD700;
+      --laranja: #FF8C00;
+      --vermelho: #fc520f;
+      --branco: #FFFFFF;
+      --preto: #000000;
+      --cinza-claro: #f9f9f9;
+      --cinza-medio: #e0e0e0;
+      --sombra: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* === CORREÇÃO DO FOOTER === */
+    html, body {
+      height: 100%;
+    }
+    .page-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .main-content {
+      flex: 1;
+      max-width: 1200px;
+      margin: 120px auto 0;
+      padding: 0 20px;
+    }
+    footer {
+      margin-top: auto;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--preto);
+      background-color: var(--branco);
+    }
+    a { text-decoration: none; color: inherit; }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--branco);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--vermelho);
+      z-index: 1000;
+    }
+    .logo { font-size: 24px; font-weight: bold; }
+    .logo span { color: var(--vermelho); }
+    .home-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: bold;
+      padding: 6px 12px;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    .categoria-header {
+      margin-bottom: 30px;
+    }
+    .categoria-titulo {
+      font-size: 32px;
+      color: var(--laranja);
+      margin-bottom: 10px;
+    }
+    .noticias-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .noticia-card {
+      background: var(--branco);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .noticia-card:hover { transform: translateY(-4px); }
+    .noticia-card img {
+      height: 180px;
+      width: 100%;
+      object-fit: cover;
+    }
+    .noticia-content { padding: 16px; }
+    .noticia-content h3 { font-size: 18px; margin-bottom: 8px; }
+    .noticia-content p { font-size: 14px; color: #666; }
+    .loading, .error {
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+      color: #666;
+    }
+    .error { color: var(--vermelho); }
+    footer {
+      background: var(--preto);
+      color: var(--branco);
+      text-align: center;
+      padding: 20px;
+    }
+    @media (max-width: 768px) {
+      .noticias-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
+    <a href="index.html" class="home-link">← Home</a>
+  </header>
+
+  <div class="page-wrapper">
+    <main class="main-content">
+      <div class="categoria-header">
+        <h1 class="categoria-titulo" id="categoria-nome">Carregando...</h1>
+      </div>
+      <div class="noticias-grid" id="noticias-container">
+        <div class="loading">Carregando notícias...</div>
+      </div>
+    </main>
+
+    <footer>
+      &copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const categoria = urlParams.get('cat');
+
+      if (!categoria) {
+        document.getElementById('categoria-nome').textContent = 'Categoria não especificada';
+        document.getElementById('noticias-container').innerHTML = '<div class="error">Nenhuma categoria selecionada.</div>';
+        return;
+      }
+
+      document.getElementById('categoria-nome').textContent = categoria;
+
+      try {
+        const response = await fetch(`/api/noticias?categoria=${encodeURIComponent(categoria)}`);
+        if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
+        const noticias = await response.json();
+
+        const container = document.getElementById('noticias-container');
+        if (noticias.length === 0) {
+          container.innerHTML = `<div class="error">Nenhuma notícia encontrada na categoria "${categoria}".</div>`;
+        } else {
+          container.innerHTML = '';
+          noticias.forEach(noticia => {
+            const card = document.createElement('article');
+            card.className = 'noticia-card';
+            card.onclick = () => window.location.href = `noticia.html?id=${noticia.id}`;
+            card.innerHTML = `
+              <img 
+                src="${noticia.imagem || 'https://via.placeholder.com/300x180?text=' + encodeURIComponent(categoria)}" 
+                alt="${noticia.titulo}"
+                onerror="this.src='https://via.placeholder.com/300x180?text=Sem+Imagem'"
+              />
+              <div class="noticia-content">
+                <h3>${noticia.titulo}</h3>
+                <p>${noticia.resumo || 'Sem resumo disponível.'}</p>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        }
+      } catch (error) {
+        console.error('Erro ao carregar notícias:', error);
+        document.getElementById('noticias-container').innerHTML = `
+          <div class="error">Erro ao carregar notícias. Tente novamente mais tarde.</div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
