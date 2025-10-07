@@ -164,14 +164,19 @@
       display: none;
       flex-direction: column;
       cursor: pointer;
+      position: relative;
+      width: 25px;
+      height: 20px;
+      justify-content: space-between;
     }
 
     .hamburger span {
-      width: 25px;
+      display: block;
+      width: 100%;
       height: 3px;
       background: var(--preto);
-      margin: 3px 0;
-      transition: 0.3s;
+      border-radius: 2px;
+      transition: all 0.3s ease;
     }
 
     /* === DESTAQUE === */
@@ -432,6 +437,7 @@
             <li><a href="#">YouTube</a></li>
           </ul>
         </div>
+      </div>
       <div class="copyright">
         &copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.
       </div>
@@ -541,14 +547,38 @@
       if (e.key === 'Enter') document.getElementById('search-trigger').click();
     });
 
-    // === MENU HAMBURGER PARA MOBILE ===
-    document.getElementById('hamburger').addEventListener('click', () => {
-      const nav = document.getElementById('main-nav').querySelector('ul');
-      nav.classList.toggle('show');
-      
+    // === MENU HAMBURGER COM X E FECHAR AO CLICAR FORA ===
+    const hamburger = document.getElementById('hamburger');
+    const nav = document.getElementById('main-nav').querySelector('ul');
+
+    function updateHamburger() {
+      const spans = hamburger.querySelectorAll('span');
       if (nav.classList.contains('show')) {
-        document.querySelectorAll('.mobile-extra').forEach(el => el.remove());
-        
+        // Transformar em X
+        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+      } else {
+        // Voltar ao hamburger
+        spans[0].style.transform = 'rotate(0)';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'rotate(0)';
+        spans[0].style.transform = '';
+        spans[1].style.opacity = '';
+        spans[2].style.transform = '';
+      }
+    }
+
+    function closeMenu() {
+      nav.classList.remove('show');
+      document.querySelectorAll('.mobile-extra').forEach(el => el.remove());
+      updateHamburger();
+    }
+
+    hamburger.addEventListener('click', () => {
+      nav.classList.toggle('show');
+      if (nav.classList.contains('show')) {
+        // Adicionar itens extras
         const searchItem = document.createElement('li');
         searchItem.className = 'mobile-menu-item mobile-extra';
         searchItem.innerHTML = `
@@ -573,10 +603,24 @@
           if (e.key === 'Enter') {
             const query = e.target.value.trim();
             if (query) {
+              closeMenu();
               window.location.href = `categoria.html?busca=${encodeURIComponent(query)}`;
             }
           }
         });
+      } else {
+        document.querySelectorAll('.mobile-extra').forEach(el => el.remove());
+      }
+      updateHamburger();
+    });
+
+    // Fechar menu ao clicar fora
+    document.addEventListener('click', (e) => {
+      const isClickInsideNav = nav.contains(e.target);
+      const isClickOnHamburger = hamburger.contains(e.target);
+
+      if (!isClickInsideNav && !isClickOnHamburger && nav.classList.contains('show')) {
+        closeMenu();
       }
     });
 
