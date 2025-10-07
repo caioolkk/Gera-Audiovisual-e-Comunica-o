@@ -8,7 +8,7 @@
   <meta name="keywords" content="GERA, audiovisual, comunicação, notícias, Brasil">
   <meta name="author" content="GERA Audiovisual e Comunicação">
   <link rel="icon" href="https://via.placeholder.com/32x32?text=GERA" type="image/png">
-
+  
   <style>
     /* === RESET E VARIÁVEIS === */
     * {
@@ -445,6 +445,7 @@
   </div>
 
   <script>
+    const API_BASE = 'https://backend-gera.onrender.com';
     // === CARREGAR DESTAQUE ===
     async function loadDestaque() {
       try {
@@ -469,7 +470,7 @@
     // === CARREGAR FEED DE NOTÍCIAS ===
     async function loadNewsFeed() {
       try {
-        const res = await fetch('/api/noticias');
+        const res = await fetch('https://backend-gera.onrender.com/api/noticias-admin');
         if (res.ok) {
           const noticias = await res.json();
           const container = document.getElementById('noticias-feed');

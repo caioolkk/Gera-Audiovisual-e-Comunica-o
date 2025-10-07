@@ -149,7 +149,7 @@
       }
 
       try {
-        const res = await fetch(`/api/noticia?id=${id}`);
+        const res = await fetch(`https://backend-gera.onrender.com/api/noticia?id=${id}`);
         if (!res.ok) throw new Error('Notícia não encontrada');
         const noticia = await res.json();
 

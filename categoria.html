@@ -155,7 +155,7 @@
       document.getElementById('categoria-nome').textContent = categoria;
 
       try {
-        const response = await fetch(`/api/noticias?categoria=${encodeURIComponent(categoria)}`);
+        const response = await fetch(`https://backend-gera.onrender.com/api/noticias?categoria=${encodeURIComponent(categoria)}`);
         if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
         const noticias = await response.json();
 
