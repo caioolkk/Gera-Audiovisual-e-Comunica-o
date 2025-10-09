@@ -18,9 +18,9 @@
       --branco: #FFFFFF;
       --preto: #000000;
       --cinza-claro: #f9f9f9;
+      --fundo-suave: #f8f6f0;
     }
 
-    /* === CORREÇÃO DO FOOTER === */
     html, body {
       height: 100%;
     }
@@ -28,6 +28,7 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      background-color: var(--fundo-suave);
     }
     .card {
       flex: 1;
@@ -38,44 +39,51 @@
     }
     footer {
       margin-top: auto;
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 14px;
     }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, var(--amarelo), var(--laranja));
     }
     .card-inner {
       background: var(--branco);
       padding: 40px;
       border-radius: 12px;
       width: 100%;
-      max-width: 400px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 420px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      position: relative;
     }
     .logo {
       text-align: center;
-      margin-bottom: 30px;
-      font-size: 28px;
+      margin-bottom: 24px;
+      font-size: 26px;
       font-weight: bold;
       color: var(--preto);
     }
     .logo span { color: var(--vermelho); }
-    .tabs {
-      display: flex;
-      margin-bottom: 24px;
+
+    .form-container {
+      position: relative;
+      height: auto;
+      overflow: hidden;
     }
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 12px;
-      cursor: pointer;
-      font-weight: bold;
-      border-bottom: 3px solid transparent;
+    .form {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      position: absolute;
+      width: 100%;
     }
-    .tab.active {
-      border-bottom-color: var(--laranja);
-      color: var(--laranja);
+    .form.active {
+      opacity: 1;
+      transform: translateY(0);
+      position: relative;
     }
+
     .form-group {
       margin-bottom: 20px;
     }
@@ -83,6 +91,7 @@
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
+      color: #333;
     }
     .form-group input {
       width: 100%;
@@ -98,31 +107,63 @@
       color: var(--branco);
       border: none;
       border-radius: 6px;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: bold;
       cursor: pointer;
+      transition: background 0.3s;
     }
     .btn:hover { background: var(--vermelho); }
+
     .social-login {
       margin-top: 20px;
       text-align: center;
     }
-    .social-btn {
-      display: inline-block;
-      margin: 8px;
-      padding: 10px 20px;
-      background: #eee;
+    .google-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+      background: white;
+      border: 1px solid #ddd;
       border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
+      color: #333;
+      text-decoration: none;
     }
+    .google-btn:hover {
+      background: #f9f9f9;
+    }
+
+    .toggle-link {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      color: var(--laranja);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .forgot-password {
+      display: block;
+      text-align: right;
+      margin-top: 8px;
+      color: var(--laranja);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
     .back-link {
       display: block;
       text-align: center;
-      margin-top: 20px;
+      margin-top: 24px;
       color: var(--laranja);
       font-weight: bold;
+      text-decoration: none;
     }
+
     .message {
       text-align: center;
       padding: 10px;
@@ -130,11 +171,7 @@
       border-radius: 4px;
     }
     .error { background: #ffebee; color: var(--vermelho); }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #666;
-    }
+    .success { background: #e8f5e9; color: #2e7d32; }
   </style>
 </head>
 <body>
@@ -143,46 +180,56 @@
       <div class="card-inner">
         <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
 
-        <div class="tabs">
-          <div class="tab active" data-tab="login">Login</div>
-          <div class="tab" data-tab="register">Cadastro</div>
+        <div class="form-container">
+          <!-- LOGIN -->
+          <div id="login-form" class="form active">
+            <div class="form-group">
+              <label for="login-email">E-mail</label>
+              <input type="email" id="login-email" required>
+            </div>
+            <div class="form-group">
+              <label for="login-password">Senha</label>
+              <input type="password" id="login-password" required>
+              <a href="#" class="forgot-password" id="forgot-password-link">Esqueceu sua senha?</a>
+            </div>
+            <button type="submit" class="btn" id="login-submit">Entrar</button>
+            <div class="social-login">
+              <a href="#" class="google-btn" id="google-login">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Continuar com Google
+              </a>
+            </div>
+            <a href="#" class="toggle-link" id="show-register">Não tem conta? Cadastre-se</a>
+          </div>
+
+          <!-- CADASTRO -->
+          <div id="register-form" class="form">
+            <div class="form-group">
+              <label for="register-email">E-mail</label>
+              <input type="email" id="register-email" required>
+            </div>
+            <div class="form-group">
+              <label for="register-password">Senha</label>
+              <input type="password" id="register-password" required minlength="6">
+            </div>
+            <div class="form-group">
+              <label for="register-confirm">Confirmar Senha</label>
+              <input type="password" id="register-confirm" required>
+            </div>
+            <button type="submit" class="btn" id="register-submit">Cadastrar com e-mail</button>
+            <div class="social-login">
+              <a href="#" class="google-btn" id="google-register">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Cadastrar com Google
+              </a>
+            </div>
+            <a href="#" class="toggle-link" id="show-login">Já tem conta? Faça login</a>
+          </div>
         </div>
 
         <div id="message"></div>
 
-        <form id="login-form">
-          <div class="form-group">
-            <label for="login-email">E-mail</label>
-            <input type="email" id="login-email" required>
-          </div>
-          <div class="form-group">
-            <label for="login-password">Senha</label>
-            <input type="password" id="login-password" required>
-          </div>
-          <button type="submit" class="btn">Entrar</button>
-          <div class="social-login">
-            <div class="social-btn">Google</div>
-            <div class="social-btn">Facebook</div>
-          </div>
-        </form>
-
-        <form id="register-form" style="display: none;">
-          <div class="form-group">
-            <label for="register-email">E-mail</label>
-            <input type="email" id="register-email" required>
-          </div>
-          <div class="form-group">
-            <label for="register-password">Senha</label>
-            <input type="password" id="register-password" required>
-          </div>
-          <div class="form-group">
-            <label for="register-confirm">Confirmar Senha</label>
-            <input type="password" id="register-confirm" required>
-          </div>
-          <button type="submit" class="btn">Cadastrar</button>
-        </form>
-
-        <a href="index.html" class="back-link">← Voltar para o portal</a>
+        <a href="https://gera-noticias.vercel.app" class="back-link">← Voltar para o portal</a>
       </div>
     </div>
 
@@ -192,17 +239,27 @@
   </div>
 
   <script>
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById('login-form').style.display = tab.dataset.tab === 'login' ? 'block' : 'none';
-        document.getElementById('register-form').style.display = tab.dataset.tab === 'register' ? 'block' : 'none';
-        document.getElementById('message').innerHTML = '';
-      });
+    const API_BASE = 'https://backend-gera.onrender.com';
+
+    // Alternar entre formulários com animação
+    function showForm(formId) {
+      document.querySelectorAll('.form').forEach(form => form.classList.remove('active'));
+      document.getElementById(formId).classList.add('active');
+      document.getElementById('message').innerHTML = '';
+    }
+
+    document.getElementById('show-register').addEventListener('click', (e) => {
+      e.preventDefault();
+      showForm('register-form');
     });
 
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
+    document.getElementById('show-login').addEventListener('click', (e) => {
+      e.preventDefault();
+      showForm('login-form');
+    });
+
+    // LOGIN com e-mail/senha
+    document.getElementById('login-submit').addEventListener('click', async (e) => {
       e.preventDefault();
       const msg = document.getElementById('message');
       const data = {
@@ -211,7 +268,7 @@
       };
 
       try {
-        const res = await fetch('https://backend-gera.onrender.com/api/login', {
+        const res = await fetch(`${API_BASE}/api/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
@@ -221,51 +278,87 @@
         if (res.ok && result.success) {
           localStorage.setItem('authToken', result.token);
           if (result.isAdmin) {
-            window.location.href = '../admin/index.html';
+            window.location.href = 'https://gera-painel-admin.vercel.app';
           } else {
-            window.location.href = 'index.html';
+            window.location.href = 'https://gera-noticias.vercel.app';
           }
         } else {
           msg.innerHTML = `<div class="message error">${result.error || 'Credenciais inválidas.'}</div>`;
+        }
+      } catch (err) {
+        msg.innerHTML = '<div class="message error">Erro de conexão com o servidor.</div>';
+      }
+    });
+
+    // CADASTRO com e-mail (com verificação)
+    document.getElementById('register-submit').addEventListener('click', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('register-email').value;
+      const pass1 = document.getElementById('register-password').value;
+      const pass2 = document.getElementById('register-confirm').value;
+      const msg = document.getElementById('message');
+
+      if (pass1 !== pass2) {
+        msg.innerHTML = '<div class="message error">As senhas não coincidem.</div>';
+        return;
+      }
+      if (pass1.length < 6) {
+        msg.innerHTML = '<div class="message error">A senha deve ter pelo menos 6 caracteres.</div>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/send-verification-code`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password: pass1 })
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+          alert('Código de verificação enviado para seu e-mail!');
+        } else {
+          msg.innerHTML = `<div class="message error">${result.error || 'Erro ao enviar código.'}</div>`;
         }
       } catch (err) {
         msg.innerHTML = '<div class="message error">Erro de conexão.</div>';
       }
     });
 
-    document.getElementById('register-form').addEventListener('submit', async (e) => {
+    // GOOGLE LOGIN (placeholder)
+    document.getElementById('google-login').addEventListener('click', (e) => {
       e.preventDefault();
-      const msg = document.getElementById('message');
-      const pass1 = document.getElementById('register-password').value;
-      const pass2 = document.getElementById('register-confirm').value;
-      
-      if (pass1 !== pass2) {
-        msg.innerHTML = '<div class="message error">As senhas não coincidem.</div>';
-        return;
-      }
+      alert('Login com Google será implementado com Firebase ou OAuth.');
+      // Redirecionar para /auth/google ou usar Firebase
+    });
 
-      const data = {
-        email: document.getElementById('register-email').value,
-        password: pass1
-      };
+    // GOOGLE REGISTER (sem verificação)
+    document.getElementById('google-register').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Cadastro com Google será implementado com Firebase ou OAuth.');
+      // Aqui, o backend cria usuário automaticamente com e-mail do Google
+    });
 
-      try {
-        const res = await fetch('https://backend-gera.onrender.com/api/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
+    // Esqueci a senha (link minimalista)
+    document.getElementById('forgot-password-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      const email = prompt('Digite seu e-mail cadastrado:');
+      if (!email) return;
 
-        const result = await res.json();
-        if (res.ok && result.success) {
-          msg.innerHTML = '<div class="message" style="background:#e8f5e9;color:#2e7d32;">Cadastro realizado! Faça login.</div>';
-          document.querySelector('.tab[data-tab="login"]').click();
+      fetch(`${API_BASE}/api/send-password-reset`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.success) {
+          alert('Código de recuperação enviado para seu e-mail!');
         } else {
-          msg.innerHTML = `<div class="message error">${result.error || 'Erro ao cadastrar.'}</div>`;
+          alert('E-mail não encontrado ou erro ao enviar.');
         }
-      } catch (err) {
-        msg.innerHTML = '<div class="message error">Erro de conexão.</div>';
-      }
+      })
+      .catch(() => alert('Erro de conexão.'));
     });
   </script>
 </body>
