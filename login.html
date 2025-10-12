@@ -238,27 +238,69 @@
     </footer>
   </div>
 
-  <script>
+  <script type="module">
+    // Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth,
+      signInWithPopup,
+      GoogleAuthProvider
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // Configuração do Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCK51eiFHX79N_Qw6LUDmf_QXOnAMefrGs",
+      authDomain: "gera-noticias.firebaseapp.com",
+      projectId: "gera-noticias",
+      storageBucket: "gera-noticias.firebasestorage.app",
+      messagingSenderId: "711804499627",
+      appId: "1:711804499627:web:307819efbe6e9378d229ee"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
     const API_BASE = 'https://backend-gera.onrender.com';
 
-    // Alternar entre formulários com animação
+    // Função para login com Google e sincronizar com backend
+    async function handleGoogleLogin() {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const email = result.user.email;
+        const name = result.user.displayName;
+
+        // Sincronizar com backend
+        const res = await fetch(`${API_BASE}/api/google-login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, name })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          if (data.isAdmin) {
+            window.location.href = 'https://gera-painel-admin.vercel.app';
+          } else {
+            window.location.href = 'https://gera-noticias.vercel.app';
+          }
+        } else {
+          alert('Erro ao sincronizar com o backend.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao fazer login com Google.');
+      }
+    }
+
+    // Alternar formulários
     function showForm(formId) {
-      document.querySelectorAll('.form').forEach(form => form.classList.remove('active'));
+      document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
       document.getElementById(formId).classList.add('active');
       document.getElementById('message').innerHTML = '';
     }
 
-    document.getElementById('show-register').addEventListener('click', (e) => {
-      e.preventDefault();
-      showForm('register-form');
-    });
-
-    document.getElementById('show-login').addEventListener('click', (e) => {
-      e.preventDefault();
-      showForm('login-form');
-    });
-
-    // LOGIN com e-mail/senha
+    // Login com e-mail/senha
     document.getElementById('login-submit').addEventListener('click', async (e) => {
       e.preventDefault();
       const msg = document.getElementById('message');
@@ -276,21 +318,20 @@
 
         const result = await res.json();
         if (res.ok && result.success) {
-          localStorage.setItem('authToken', result.token);
           if (result.isAdmin) {
             window.location.href = 'https://gera-painel-admin.vercel.app';
           } else {
             window.location.href = 'https://gera-noticias.vercel.app';
           }
         } else {
-          msg.innerHTML = `<div class="message error">${result.error || 'Credenciais inválidas.'}</div>`;
+          msg.innerHTML = `<div class="message error">${result.error || 'Credenciais inválidas ou e-mail não verificado.'}</div>`;
         }
       } catch (err) {
         msg.innerHTML = '<div class="message error">Erro de conexão com o servidor.</div>';
       }
     });
 
-    // CADASTRO com e-mail (com verificação)
+    // Cadastro com e-mail
     document.getElementById('register-submit').addEventListener('click', async (e) => {
       e.preventDefault();
       const email = document.getElementById('register-email').value;
@@ -308,57 +349,63 @@
       }
 
       try {
-        const res = await fetch(`${API_BASE}/api/send-verification-code`, {
+        const res = await fetch(`${API_BASE}/api/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password: pass1 })
         });
-
         const result = await res.json();
-        if (res.ok) {
-          alert('Código de verificação enviado para seu e-mail!');
+        if (res.ok && result.success) {
+          // Enviar código de verificação
+          const codeRes = await fetch(`${API_BASE}/api/send-verification-code`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+          if (codeRes.ok) {
+            alert('Código de verificação enviado para seu e-mail!');
+          }
+          showForm('login-form');
         } else {
-          msg.innerHTML = `<div class="message error">${result.error || 'Erro ao enviar código.'}</div>`;
+          msg.innerHTML = `<div class="message error">${result.error || 'Erro ao cadastrar.'}</div>`;
         }
       } catch (err) {
         msg.innerHTML = '<div class="message error">Erro de conexão.</div>';
       }
     });
 
-    // GOOGLE LOGIN (placeholder)
-    document.getElementById('google-login').addEventListener('click', (e) => {
-      e.preventDefault();
-      alert('Login com Google será implementado com Firebase ou OAuth.');
-      // Redirecionar para /auth/google ou usar Firebase
-    });
-
-    // GOOGLE REGISTER (sem verificação)
-    document.getElementById('google-register').addEventListener('click', (e) => {
-      e.preventDefault();
-      alert('Cadastro com Google será implementado com Firebase ou OAuth.');
-      // Aqui, o backend cria usuário automaticamente com e-mail do Google
-    });
-
-    // Esqueci a senha (link minimalista)
-    document.getElementById('forgot-password-link').addEventListener('click', (e) => {
+    // Esqueci a senha
+    document.getElementById('forgot-password-link').addEventListener('click', async (e) => {
       e.preventDefault();
       const email = prompt('Digite seu e-mail cadastrado:');
       if (!email) return;
 
-      fetch(`${API_BASE}/api/send-password-reset`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      })
-      .then(res => res.json())
-      .then(result => {
-        if (result.success) {
+      try {
+        const res = await fetch(`${API_BASE}/api/send-password-reset`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        if (res.ok) {
           alert('Código de recuperação enviado para seu e-mail!');
         } else {
-          alert('E-mail não encontrado ou erro ao enviar.');
+          alert('E-mail não encontrado.');
         }
-      })
-      .catch(() => alert('Erro de conexão.'));
+      } catch (err) {
+        alert('Erro de conexão.');
+      }
+    });
+
+    // Google Login e Cadastro
+    document.getElementById('google-login').addEventListener('click', handleGoogleLogin);
+    document.getElementById('google-register').addEventListener('click', handleGoogleLogin);
+
+    // Alternar entre login e cadastro
+    document.getElementById('show-register').addEventListener('click', (e) => {
+      e.preventDefault(); showForm('register-form');
+    });
+    document.getElementById('show-login').addEventListener('click', (e) => {
+      e.preventDefault(); showForm('login-form');
     });
   </script>
 </body>
