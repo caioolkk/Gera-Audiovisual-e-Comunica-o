@@ -158,6 +158,22 @@
       border: 1px solid var(--cinza-medio);
       border-radius: 20px;
       cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .profile-btn:hover {
+      background-color: var(--laranja);
+      color: var(--branco);
+      border-color: var(--laranja);
+    }
+
+    .profile-btn svg {
+      fill: currentColor;
+      transition: transform 0.2s ease;
+    }
+
+    .profile-btn:hover svg {
+      transform: scale(1.1);
     }
 
     .hamburger {
@@ -398,8 +414,11 @@
         <span class="anuncie-icon">📢</span>
         Anuncie Aqui
       </a>
-      <a href="login.html" class="profile-btn">
-        👤 Perfil
+      <a href="login.html" class="profile-btn" title="Área do Usuário">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c1.52 0 5.1 1.34 5.1 5v2H6.9v-2c0-3.66 3.58-5 5.1-5z"/>
+        </svg>
+        Perfil
       </a>
     </div>
   </header>
@@ -445,11 +464,13 @@
   </div>
 
   <script>
+    // ✅ URL base corrigida (sem espaços!)
     const API_BASE = 'https://backend-gera.onrender.com';
+
     // === CARREGAR DESTAQUE ===
     async function loadDestaque() {
       try {
-        const res = await fetch('/api/destaque');
+        const res = await fetch(`${API_BASE}/api/destaque`);
         if (res.ok) {
           const noticia = await res.json();
           if (noticia.id) {
@@ -460,30 +481,31 @@
             `;
             document.getElementById('destaque-section').onclick = () => 
               window.location = `noticia.html?id=${noticia.id}`;
+          } else {
+            document.getElementById('destaque-section').innerHTML = '<p style="text-align:center;">Nenhum destaque disponível.</p>';
           }
         }
       } catch (err) {
         console.error('Erro ao carregar destaque:', err);
+        document.getElementById('destaque-section').innerHTML = '<p style="text-align:center;color:red;">Erro ao carregar destaque.</p>';
       }
     }
 
     // === CARREGAR FEED DE NOTÍCIAS ===
     async function loadNewsFeed() {
       try {
-        const res = await fetch('https://backend-gera.onrender.com/api/noticias-admin');
+        const res = await fetch(`${API_BASE}/api/noticias`);
         if (res.ok) {
           const noticias = await res.json();
           const container = document.getElementById('noticias-feed');
-          container.innerHTML = '';
           
           if (noticias.length === 0) {
             container.innerHTML = '<p style="text-align:center;padding:20px;">Nenhuma notícia disponível no momento.</p>';
             return;
           }
 
-          const feedNoticias = noticias.slice(0, 10);
-
-          feedNoticias.forEach(n => {
+          container.innerHTML = '';
+          noticias.slice(0, 10).forEach(n => {
             const card = document.createElement('article');
             card.className = 'noticia-card';
             card.onclick = () => window.location = `noticia.html?id=${n.id}`;
@@ -512,7 +534,7 @@
       if (!query) return loadNewsFeed();
 
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`${API_BASE}/api/search?q=${encodeURIComponent(query)}`);
         if (res.ok) {
           const resultados = await res.json();
           const container = document.getElementById('noticias-feed');
@@ -541,6 +563,7 @@
         }
       } catch (err) {
         console.error('Erro na busca:', err);
+        document.getElementById('noticias-feed').innerHTML = '<p style="text-align:center;padding:20px;color:red;">Erro na busca.</p>';
       }
     });
 
@@ -548,25 +571,21 @@
       if (e.key === 'Enter') document.getElementById('search-trigger').click();
     });
 
-    // === MENU HAMBURGER COM X E FECHAR AO CLICAR FORA ===
+    // === MENU HAMBURGER ===
     const hamburger = document.getElementById('hamburger');
     const nav = document.getElementById('main-nav').querySelector('ul');
 
     function updateHamburger() {
       const spans = hamburger.querySelectorAll('span');
       if (nav.classList.contains('show')) {
-        // Transformar em X
         spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
         spans[1].style.opacity = '0';
         spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
       } else {
-        // Voltar ao hamburger
-        spans[0].style.transform = 'rotate(0)';
-        spans[1].style.opacity = '1';
-        spans[2].style.transform = 'rotate(0)';
-        spans[0].style.transform = '';
-        spans[1].style.opacity = '';
-        spans[2].style.transform = '';
+        spans.forEach(span => {
+          span.style.transform = '';
+          span.style.opacity = '';
+        });
       }
     }
 
@@ -579,7 +598,6 @@
     hamburger.addEventListener('click', () => {
       nav.classList.toggle('show');
       if (nav.classList.contains('show')) {
-        // Adicionar itens extras
         const searchItem = document.createElement('li');
         searchItem.className = 'mobile-menu-item mobile-extra';
         searchItem.innerHTML = `
@@ -615,16 +633,15 @@
       updateHamburger();
     });
 
-    // Fechar menu ao clicar fora
     document.addEventListener('click', (e) => {
       const isClickInsideNav = nav.contains(e.target);
       const isClickOnHamburger = hamburger.contains(e.target);
-
       if (!isClickInsideNav && !isClickOnHamburger && nav.classList.contains('show')) {
         closeMenu();
       }
     });
 
+    // === INICIALIZAR ===
     document.addEventListener('DOMContentLoaded', () => {
       loadDestaque();
       loadNewsFeed();
