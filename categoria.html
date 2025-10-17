@@ -22,24 +22,15 @@
       --sombra: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* === CORREÇÃO DO FOOTER === */
-    html, body {
-      height: 100%;
-    }
-    .page-wrapper {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+    html, body { height: 100%; }
+    .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
     .main-content {
       flex: 1;
       max-width: 1200px;
       margin: 120px auto 0;
       padding: 0 16px;
     }
-    footer {
-      margin-top: auto;
-    }
+    footer { margin-top: auto; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -72,57 +63,67 @@
       border-radius: 20px;
       cursor: pointer;
     }
-    .categoria-header {
-      margin-bottom: 30px;
-    }
+    .categoria-header { margin-bottom: 30px; }
     .categoria-titulo {
       font-size: 32px;
       color: var(--laranja);
       margin-bottom: 10px;
     }
 
-    /* === GRID RESPONSIVO === */
     .noticias-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 24px;
       width: 100%;
     }
 
+    @media (min-width: 480px) {
+      .noticias-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 768px) {
+      .noticias-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+    }
+
     .noticia-card {
-      background: var(--branco);
+      display: flex;
+      gap: 16px;
+      background-color: var(--branco);
       border-radius: 8px;
       overflow: hidden;
       box-shadow: var(--sombra);
+      transition: transform 0.2s ease;
       cursor: pointer;
-      transition: transform 0.2s;
-      display: flex;
       flex-direction: column;
     }
-
     .noticia-card:hover { transform: translateY(-4px); }
 
-    .noticia-card img {
-      height: 160px;
+    .noticia-img {
       width: 100%;
-      object-fit: cover;
+      height: 160px;
+      flex-shrink: 0;
     }
+    @media (min-width: 769px) {
+      .noticia-card { flex-direction: row; }
+      .noticia-img { width: 200px; height: auto; }
+    }
+    .noticia-img img { width: 100%; height: 100%; object-fit: cover; }
 
-    .noticia-content { 
-      padding: 16px; 
-      flex: 1;
+    .noticia-content { padding: 16px; flex: 1; }
+    .categoria-tag {
+      display: inline-block;
+      background-color: var(--laranja);
+      color: var(--branco);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-bottom: 8px;
     }
-
-    .noticia-content h3 { 
-      font-size: 18px; 
-      margin-bottom: 8px; 
-      line-height: 1.3;
-    }
-
-    .noticia-content p { 
-      font-size: 14px; 
-      color: #666; 
-    }
+    .noticia-content h3 { font-size: 18px; margin-bottom: 8px; line-height: 1.3; }
+    .noticia-content p { font-size: 14px; color: #666; }
 
     .loading, .error {
       grid-column: 1 / -1;
@@ -139,13 +140,6 @@
       text-align: center;
       padding: 20px;
     }
-
-    /* === MOBILE: mantém 1 ou 2 colunas conforme espaço === */
-    @media (max-width: 768px) {
-      .noticias-grid {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      }
-    }
   </style>
 </head>
 <body>
@@ -159,63 +153,48 @@
       <div class="categoria-header">
         <h1 class="categoria-titulo" id="categoria-nome">Carregando...</h1>
       </div>
-      <div class="noticias-grid" id="noticias-container">
-        <!-- Será preenchido por JavaScript -->
-      </div>
+      <div class="noticias-grid" id="noticias-container"></div>
     </main>
-
-    <footer>
-      &copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.
-    </footer>
+    <footer>&copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.</footer>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const categoria = urlParams.get('cat');
-
-      if (!categoria) {
+      const cat = new URLSearchParams(window.location.search).get('cat');
+      if (!cat) {
         document.getElementById('categoria-nome').textContent = 'Categoria não especificada';
         document.getElementById('noticias-container').innerHTML = '<div class="error">Nenhuma categoria selecionada.</div>';
         return;
       }
-
-      document.getElementById('categoria-nome').textContent = categoria;
+      document.getElementById('categoria-nome').textContent = cat;
 
       try {
-        // ✅ URL corrigida (sem espaços!)
-        const response = await fetch(`https://backend-gera.onrender.com/api/noticias?categoria=${encodeURIComponent(categoria)}`);
-        if (!response.ok) throw new Error(`Erro na API: ${response.status}`);
-        const noticias = await response.json();
-
+        const res = await fetch(`https://backend-gera.onrender.com/api/noticias?categoria=${encodeURIComponent(cat)}`);
+        const noticias = await res.json();
         const container = document.getElementById('noticias-container');
-        if (!Array.isArray(noticias) || noticias.length === 0) {
-          container.innerHTML = `<div class="error">Nenhuma notícia encontrada na categoria "${categoria}".</div>`;
+        if (!noticias.length) {
+          container.innerHTML = `<div class="error">Nenhuma notícia em "${cat}".</div>`;
         } else {
           container.innerHTML = '';
-          noticias.forEach(noticia => {
+          noticias.forEach(n => {
             const card = document.createElement('article');
             card.className = 'noticia-card';
-            card.onclick = () => window.location.href = `noticia.html?id=${noticia.id}`;
+            card.onclick = () => location.href = `noticia.html?id=${n.id}`;
             card.innerHTML = `
-              <img 
-                src="${noticia.imagem || 'https://via.placeholder.com/240x160?text=' + encodeURIComponent(categoria)}" 
-                alt="${noticia.titulo}"
-                onerror="this.src='https://via.placeholder.com/240x160?text=Sem+Imagem'"
-              />
+              <div class="noticia-img">
+                <img src="${n.imagem || 'https://via.placeholder.com/240x160?text=' + encodeURIComponent(cat)}" alt="${n.titulo}" onerror="this.src='https://via.placeholder.com/240x160?text=Sem+Imagem'" />
+              </div>
               <div class="noticia-content">
-                <h3>${noticia.titulo}</h3>
-                <p>${noticia.resumo || 'Sem resumo disponível.'}</p>
+                <span class="categoria-tag">${n.categoria}</span>
+                <h3>${n.titulo}</h3>
+                <p>${n.resumo || 'Sem resumo.'}</p>
               </div>
             `;
             container.appendChild(card);
           });
         }
-      } catch (error) {
-        console.error('Erro ao carregar notícias:', error);
-        document.getElementById('noticias-container').innerHTML = `
-          <div class="error">Erro ao carregar notícias. Verifique sua conexão.</div>
-        `;
+      } catch {
+        document.getElementById('noticias-container').innerHTML = '<div class="error">Erro ao carregar notícias.</div>';
       }
     });
   </script>

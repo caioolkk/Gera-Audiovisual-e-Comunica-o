@@ -21,24 +21,15 @@
       --cinza-medio: #e0e0e0;
     }
 
-    /* === CORREÇÃO DO FOOTER === */
-    html, body {
-      height: 100%;
-    }
-    .page-wrapper {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+    html, body { height: 100%; }
+    .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
     .main-content {
       flex: 1;
       max-width: 800px;
       margin: 120px auto 0;
       padding: 0 16px;
     }
-    footer {
-      margin-top: auto;
-    }
+    footer { margin-top: auto; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -133,51 +124,30 @@
         <div style="text-align: center; padding: 40px; color: #666;">Carregando notícia...</div>
       </article>
     </main>
-
-    <footer>
-      &copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.
-    </footer>
+    <footer>&copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.</footer>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get('id');
-
+      const id = new URLSearchParams(window.location.search).get('id');
       if (!id) {
-        document.getElementById('noticia-conteudo').innerHTML = '<div class="error">ID da notícia não fornecido.</div>';
+        document.getElementById('noticia-conteudo').innerHTML = '<div class="error">ID não fornecido.</div>';
         return;
       }
 
       try {
-        // ✅ URL corrigida (sem espaços!)
         const res = await fetch(`https://backend-gera.onrender.com/api/noticia?id=${id}`);
-        if (!res.ok) throw new Error('Notícia não encontrada');
         const noticia = await res.json();
-
-        if (!noticia.id) {
-          document.getElementById('noticia-conteudo').innerHTML = '<div class="error">Notícia não encontrada.</div>';
-          return;
-        }
-
-        // Garantir que o corpo seja HTML seguro (seu backend já salva HTML)
+        if (!noticia.id) throw new Error();
         document.getElementById('noticia-conteudo').innerHTML = `
           <div class="categoria-tag">${noticia.categoria}</div>
           <h1 class="noticia-titulo">${noticia.titulo}</h1>
           <div class="noticia-data">${noticia.data || 'Data não disponível'}</div>
-          <img 
-            src="${noticia.imagem || 'https://via.placeholder.com/800x400?text=Sem+Imagem'}" 
-            alt="${noticia.titulo}" 
-            class="noticia-imagem"
-            onerror="this.src='https://via.placeholder.com/800x400?text=Sem+Imagem'"
-          >
+          <img src="${noticia.imagem || 'https://via.placeholder.com/800x400?text=Sem+Imagem'}" alt="${noticia.titulo}" class="noticia-imagem" onerror="this.src='https://via.placeholder.com/800x400?text=Sem+Imagem'">
           <div class="noticia-corpo">${noticia.corpo || '<p>Conteúdo não disponível.</p>'}</div>
         `;
-      } catch (error) {
-        console.error('Erro ao carregar notícia:', error);
-        document.getElementById('noticia-conteudo').innerHTML = `
-          <div class="error">Erro ao carregar notícia. Verifique sua conexão.</div>
-        `;
+      } catch {
+        document.getElementById('noticia-conteudo').innerHTML = '<div class="error">Erro ao carregar notícia.</div>';
       }
     });
   </script>
