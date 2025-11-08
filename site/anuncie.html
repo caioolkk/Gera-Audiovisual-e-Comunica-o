@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anuncie Conosco - GERA Audiovisual e Comunicação</title>
+  <meta name="description" content="Anuncie com a GERA Audiovisual e Comunicação.">
+  <meta name="keywords" content="GERA, anunciar, publicidade, marketing, Brasil">
+  <meta name="author" content="GERA Audiovisual e Comunicação">
+  <link rel="icon" href="https://via.placeholder.com/32x32?text=GERA" type="image/png">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --amarelo: #FFD700;
+      --laranja: #FF8C00;
+      --vermelho: #fc520f;
+      --branco: #FFFFFF;
+      --preto: #000000;
+    }
+
+    /* === CORREÇÃO DO FOOTER === */
+    html, body {
+      height: 100%;
+    }
+    .page-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .container {
+      flex: 1;
+      max-width: 600px;
+      margin: 80px auto 0;
+      padding: 30px;
+      background: var(--branco);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    footer {
+      margin-top: auto;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--cinza-claro);
+      color: var(--preto);
+    }
+    header {
+      background: var(--branco);
+      padding: 16px 20px;
+      border-bottom: 2px solid var(--vermelho);
+    }
+    .logo { font-size: 24px; font-weight: bold; }
+    .logo span { color: var(--vermelho); }
+    .home-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: bold;
+      padding: 6px 12px;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    h1 {
+      color: var(--laranja);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .form-group textarea { height: 120px; resize: vertical; }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--laranja);
+      color: var(--branco);
+      border: none;
+      border-radius: 6px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover { background: var(--vermelho); }
+    .success, .error {
+      text-align: center;
+      padding: 12px;
+      margin: 16px 0;
+      border-radius: 6px;
+    }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
+    <a href="index.html" class="home-link">← Voltar para o Portal</a>
+  </header>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <h1>Anuncie Conosco</h1>
+      <div id="message-container"></div>
+      <form id="anuncio-form">
+        <div class="form-group">
+          <label for="nome">Nome Completo *</label>
+          <input type="text" id="nome" required>
+        </div>
+        <div class="form-group">
+          <label for="empresa">Empresa *</label>
+          <input type="text" id="empresa" required>
+        </div>
+        <div class="form-group">
+          <label for="email">E-mail *</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="telefone">Telefone *</label>
+          <input type="tel" id="telefone" required>
+        </div>
+        <div class="form-group">
+          <label for="tipo">Tipo de Anúncio *</label>
+          <select id="tipo" required>
+            <option value="">Selecione</option>
+            <option value="banner">Banner Lateral</option>
+            <option value="destaque">Notícia em Destaque</option>
+            <option value="patrocinio">Patrocínio de Categoria</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="mensagem">Mensagem *</label>
+          <textarea id="mensagem" placeholder="Descreva seu interesse..." required></textarea>
+        </div>
+        <button type="submit" class="btn">Enviar Solicitação</button>
+      </form>
+    </div>
+
+    <footer>
+      &copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('anuncio-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msgDiv = document.getElementById('message-container');
+      
+      const formData = {
+        nome: document.getElementById('nome').value,
+        empresa: document.getElementById('empresa').value,
+        email: document.getElementById('email').value,
+        telefone: document.getElementById('telefone').value,
+        tipo: document.getElementById('tipo').value,
+        mensagem: document.getElementById('mensagem').value
+      };
+
+      // Alinhar aqui
+      try {
+        const res = await fetch('https://backend-gera.onrender.com/api/add-ad', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+        
+        if (res.ok) {
+          msgDiv.innerHTML = '<div class="success">Solicitação enviada com sucesso! Entraremos em contato em breve.</div>';
+          document.getElementById('anuncio-form').reset();
+        } else {
+          const error = await res.text();
+          msgDiv.innerHTML = `<div class="error">Erro: ${error || 'Não foi possível enviar.'}</div>`;
+        }
+      } catch (err) {
+        msgDiv.innerHTML = '<div class="error">Erro de conexão. Verifique sua internet.</div>';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - GERA Audiovisual e Comunicação</title>
+  <meta name="description" content="Faça login na GERA Audiovisual e Comunicação.">
+  <meta name="keywords" content="GERA, login, cadastro, acesso, admin">
+  <meta name="author" content="GERA Audiovisual e Comunicação">
+  <link rel="icon" href="https://via.placeholder.com/32x32?text=GERA" type="image/png">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --amarelo: #FFD700;
+      --laranja: #FF8C00;
+      --vermelho: #fc520f;
+      --branco: #FFFFFF;
+      --preto: #000000;
+      --cinza-claro: #f9f9f9;
+      --fundo-suave: #f8f6f0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+    .page-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: var(--fundo-suave);
+    }
+    .card {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .card-inner {
+      background: var(--branco);
+      padding: 40px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      position: relative;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 26px;
+      font-weight: bold;
+      color: var(--preto);
+    }
+    .logo span { color: var(--vermelho); }
+
+    .form-container {
+      position: relative;
+      height: auto;
+      overflow: hidden;
+    }
+    .form {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      position: absolute;
+      width: 100%;
+    }
+    .form.active {
+      opacity: 1;
+      transform: translateY(0);
+      position: relative;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--laranja);
+      color: var(--branco);
+      border: none;
+      border-radius: 6px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover { background: var(--vermelho); }
+
+    .toggle-link {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      color: var(--laranja);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .forgot-password {
+      display: block;
+      text-align: right;
+      margin-top: 8px;
+      color: var(--laranja);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 24px;
+      color: var(--laranja);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .message {
+      text-align: center;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .error { background: #ffebee; color: var(--vermelho); }
+    .success { background: #e8f5e9; color: #2e7d32; }
+
+    /* === TOAST MODERNO === */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast {
+      padding: 14px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideIn 0.3s ease forwards, fadeOut 0.4s ease 2.6s forwards;
+      max-width: 320px;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    .toast.success { background: var(--laranja); }
+    .toast.error { background: var(--vermelho); }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="card">
+      <div class="card-inner">
+        <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
+
+        <div class="form-container">
+          <!-- LOGIN -->
+          <div id="login-form" class="form active">
+            <div class="form-group">
+              <label for="login-email">E-mail</label>
+              <input type="email" id="login-email" required>
+            </div>
+            <div class="form-group">
+              <label for="login-password">Senha</label>
+              <input type="password" id="login-password" required>
+              <a href="#" class="forgot-password" id="forgot-password-link">Esqueceu sua senha?</a>
+            </div>
+            <button type="submit" class="btn" id="login-submit">Entrar</button>
+            <a href="#" class="toggle-link" id="show-register">Não tem conta? Cadastre-se</a>
+          </div>
+
+          <!-- CADASTRO -->
+          <div id="register-form" class="form">
+            <div class="form-group">
+              <label for="register-name">Nome Completo</label>
+              <input type="text" id="register-name" required minlength="3">
+            </div>
+            <div class="form-group">
+              <label for="register-email">E-mail</label>
+              <input type="email" id="register-email" required>
+            </div>
+            <div class="form-group">
+              <label for="register-age">Idade</label>
+              <input type="number" id="register-age" required min="13" max="120">
+            </div>
+            <div class="form-group">
+              <label for="register-password">Senha</label>
+              <input type="password" id="register-password" required minlength="6">
+            </div>
+            <div class="form-group">
+              <label for="register-confirm">Confirmar Senha</label>
+              <input type="password" id="register-confirm" required>
+            </div>
+            <button type="submit" class="btn" id="register-submit">Cadastrar com e-mail</button>
+            <a href="#" class="toggle-link" id="show-login">Já tem conta? Faça login</a>
+          </div>
+        </div>
+
+        <div id="message"></div>
+
+        // Alinhar aqui
+        <a href="https://gera-noticias.vercel.app" class="back-link">← Voltar para o portal</a>
+      </div>
+    </div>
+
+    <footer>
+      &copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.
+    </footer>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <script>
+    // Função para mostrar toast moderno
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast);
+        }
+      }, 3000);
+    }
+
+    // Alternar formulários
+    function showForm(formId) {
+      document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+      document.getElementById(formId).classList.add('active');
+      document.getElementById('message').innerHTML = '';
+    }
+
+    // Alinhar aqui
+    const API_BASE = 'https://backend-gera.onrender.com';
+
+    // Login com e-mail/senha
+    document.getElementById('login-submit').addEventListener('click', async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById('message');
+      const data = {
+        email: document.getElementById('login-email').value,
+        password: document.getElementById('login-password').value
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/api/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        if (res.ok && result.success) {
+          if (result.isAdmin) {
+            window.location.href = 'https://gera-painel-admin.vercel.app'; // Alinhar aqui
+          } else {
+            window.location.href = 'https://gera-noticias.vercel.app'; // Alinhar aqui
+          }
+        } else {
+          msg.innerHTML = `<div class="message error">${result.error || 'Credenciais inválidas ou e-mail não verificado.'}</div>`;
+        }
+      } catch (err) {
+        msg.innerHTML = '<div class="message error">Erro de conexão com o servidor.</div>';
+      }
+    });
+
+    // Cadastro com e-mail
+    document.getElementById('register-submit').addEventListener('click', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('register-name').value.trim();
+      const email = document.getElementById('register-email').value.trim();
+      const age = document.getElementById('register-age').value;
+      const pass1 = document.getElementById('register-password').value;
+      const pass2 = document.getElementById('register-confirm').value;
+      const msg = document.getElementById('message');
+
+      if (!name) {
+        msg.innerHTML = '<div class="message error">Por favor, informe seu nome completo.</div>';
+        return;
+      }
+      if (pass1 !== pass2) {
+        msg.innerHTML = '<div class="message error">As senhas não coincidem.</div>';
+        return;
+      }
+      if (pass1.length < 6) {
+        msg.innerHTML = '<div class="message error">A senha deve ter pelo menos 6 caracteres.</div>';
+        return;
+      }
+      if (!age || age < 13 || age > 120) {
+        msg.innerHTML = '<div class="message error">Idade inválida. Deve estar entre 13 e 120 anos.</div>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, age, password: pass1 })
+        });
+        const result = await res.json();
+        if (res.ok && result.success) {
+          const codeRes = await fetch(`${API_BASE}/api/send-verification-code`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+          if (codeRes.ok) {
+            showToast('Código de verificação enviado para seu e-mail!', 'success');
+          }
+          showForm('login-form');
+        } else {
+          msg.innerHTML = `<div class="message error">${result.error || 'Erro ao cadastrar.'}</div>`;
+        }
+      } catch (err) {
+        msg.innerHTML = '<div class="message error">Erro de conexão.</div>';
+      }
+    });
+
+    // Esqueci a senha — com modal moderno
+    document.getElementById('forgot-password-link').addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      `;
+
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = `
+        background: var(--branco);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+      `;
+
+      modalContent.innerHTML = `
+        <h3 style="color: var(--preto); margin-bottom: 16px; font-weight: bold;">Recuperar Senha</h3>
+        <p style="color: #666; margin-bottom: 20px; font-size: 14px;">
+          Digite seu e-mail cadastrado para receber o código de recuperação.
+        </p>
+        <input 
+          type="email" 
+          id="reset-email" 
+          placeholder="seu@email.com"
+          style="
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+          "
+          required
+        >
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+          <button 
+            id="reset-send-btn" 
+            style="
+              padding: 10px 20px;
+              background: var(--laranja);
+              color: var(--branco);
+              border: none;
+              border-radius: 6px;
+              font-weight: bold;
+              cursor: pointer;
+              transition: background 0.3s;
+            "
+          >Enviar Código</button>
+          <button 
+            id="reset-cancel-btn" 
+            style="
+              padding: 10px 20px;
+              background: #f0f0f0;
+              color: #333;
+              border: none;
+              border-radius: 6px;
+              font-weight: bold;
+              cursor: pointer;
+              transition: background 0.3s;
+            "
+          >Cancelar</button>
+        </div>
+      `;
+
+      modal.appendChild(modalContent);
+      document.body.appendChild(modal);
+
+      document.getElementById('reset-send-btn').addEventListener('click', async () => {
+        const email = document.getElementById('reset-email').value.trim();
+        if (!email) {
+          showToast('Por favor, insira um e-mail válido.', 'error');
+          return;
+        }
+
+        try {
+          const res = await fetch(`${API_BASE}/api/send-password-reset`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+
+          if (res.ok) {
+            showToast('Código de recuperação enviado para seu e-mail!', 'success');
+          } else {
+            showToast('E-mail não encontrado.', 'error');
+          }
+        } catch (err) {
+          showToast('Erro de conexão com o servidor.', 'error');
+        }
+
+        document.body.removeChild(modal);
+      });
+
+      document.getElementById('reset-cancel-btn').addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+    });
+
+    // Alternar entre login e cadastro
+    document.getElementById('show-register').addEventListener('click', (e) => {
+      e.preventDefault(); showForm('register-form');
+    });
+    document.getElementById('show-login').addEventListener('click', (e) => {
+      e.preventDefault(); showForm('login-form');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Categoria - GERA Audiovisual e Comunicação</title>
+  <meta name="description" content="Notícias por categoria da GERA Audiovisual e Comunicação.">
+  <meta name="keywords" content="GERA, categoria, notícias, cultura, política, eventos">
+  <meta name="author" content="GERA Audiovisual e Comunicação">
+  <link rel="icon" href="https://via.placeholder.com/32x32?text=GERA" type="image/png">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --amarelo: #FFD700;
+      --laranja: #FF8C00;
+      --vermelho: #fc520f;
+      --branco: #FFFFFF;
+      --preto: #000000;
+      --cinza-claro: #f9f9f9;
+      --cinza-medio: #e0e0e0;
+      --sombra: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    html, body { height: 100%; }
+    .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+    .main-content {
+      flex: 1;
+      max-width: 1200px;
+      margin: 120px auto 0;
+      padding: 0 16px;
+    }
+    footer { margin-top: auto; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--preto);
+      background-color: var(--branco);
+    }
+    a { text-decoration: none; color: inherit; }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--branco);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--vermelho);
+      z-index: 1000;
+    }
+    .logo { font-size: 24px; font-weight: bold; }
+    .logo span { color: var(--vermelho); }
+    .home-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: bold;
+      padding: 6px 12px;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    .categoria-header { margin-bottom: 30px; }
+    .categoria-titulo {
+      font-size: 32px;
+      color: var(--laranja);
+      margin-bottom: 10px;
+    }
+
+    .noticias-grid {
+      display: grid;
+      gap: 24px;
+      width: 100%;
+    }
+
+    @media (min-width: 480px) {
+      .noticias-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 768px) {
+      .noticias-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+    }
+
+    .noticia-card {
+      display: flex;
+      gap: 16px;
+      background-color: var(--branco);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+      transition: transform 0.2s ease;
+      cursor: pointer;
+      flex-direction: column;
+    }
+    .noticia-card:hover { transform: translateY(-4px); }
+
+    .noticia-img {
+      width: 100%;
+      height: 160px;
+      flex-shrink: 0;
+    }
+    @media (min-width: 769px) {
+      .noticia-card { flex-direction: row; }
+      .noticia-img { width: 200px; height: auto; }
+    }
+    .noticia-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .noticia-content { padding: 16px; flex: 1; }
+    .categoria-tag {
+      display: inline-block;
+      background-color: var(--laranja);
+      color: var(--branco);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .noticia-content h3 { font-size: 18px; margin-bottom: 8px; line-height: 1.3; }
+    .noticia-content p { font-size: 14px; color: #666; }
+
+    .loading, .error {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+      color: #666;
+    }
+    .error { color: var(--vermelho); }
+
+    footer {
+      background: var(--preto);
+      color: var(--branco);
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
+    <a href="index.html" class="home-link">← Voltar</a>
+  </header>
+
+  <div class="page-wrapper">
+    <main class="main-content">
+      <div class="categoria-header">
+        <h1 class="categoria-titulo" id="categoria-nome">Carregando...</h1>
+      </div>
+      <div class="noticias-grid" id="noticias-container"></div>
+    </main>
+    <footer>&copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.</footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const cat = new URLSearchParams(window.location.search).get('cat');
+      if (!cat) {
+        document.getElementById('categoria-nome').textContent = 'Categoria não especificada';
+        document.getElementById('noticias-container').innerHTML = '<div class="error">Nenhuma categoria selecionada.</div>';
+        return;
+      }
+      document.getElementById('categoria-nome').textContent = cat;
+
+      // Alinhar aqui
+      
+      try {
+        const res = await fetch(`https://backend-gera.onrender.com/api/noticias?categoria=${encodeURIComponent(cat)}`);
+        const noticias = await res.json();
+        const container = document.getElementById('noticias-container');
+        if (!noticias.length) {
+          container.innerHTML = `<div class="error">Nenhuma notícia em "${cat}".</div>`;
+        } else {
+          container.innerHTML = '';
+          noticias.forEach(n => {
+            const card = document.createElement('article');
+            card.className = 'noticia-card';
+            card.onclick = () => location.href = `noticia.html?id=${n.id}`;
+            card.innerHTML = `
+              <div class="noticia-img">
+                <img src="${n.imagem || 'https://via.placeholder.com/240x160?text=' + encodeURIComponent(cat)}" alt="${n.titulo}" onerror="this.src='https://via.placeholder.com/240x160?text=Sem+Imagem'" />
+              </div>
+              <div class="noticia-content">
+                <span class="categoria-tag">${n.categoria}</span>
+                <h3>${n.titulo}</h3>
+                <p>${n.resumo || 'Sem resumo.'}</p>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        }
+      } catch {
+        document.getElementById('noticias-container').innerHTML = '<div class="error">Erro ao carregar notícias.</div>';
+      }
+    });
+  </script>
+</body>
+</html>

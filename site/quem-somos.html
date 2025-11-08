@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quem Somos - GERA Audiovisual e Comunicação</title>
+  <meta name="description" content="Conheça a GERA Audiovisual e Comunicação.">
+  <meta name="keywords" content="GERA, sobre nós, equipe, missão, visão">
+  <meta name="author" content="GERA Audiovisual e Comunicação">
+  <link rel="icon" href="https://via.placeholder.com/32x32?text=GERA" type="image/png">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --amarelo: #FFD700;
+      --laranja: #FF8C00;
+      --vermelho: #fc520f;
+      --branco: #FFFFFF;
+      --preto: #000000;
+    }
+
+    /* === CORREÇÃO DO FOOTER === */
+    html, body {
+      height: 100%;
+    }
+    .page-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .container {
+      flex: 1;
+      max-width: 800px;
+      margin: 120px auto 0;
+      padding: 0 20px;
+    }
+    footer {
+      margin-top: auto;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--preto);
+      background-color: var(--branco);
+    }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--branco);
+      padding: 16px 20px;
+      border-bottom: 2px solid var(--vermelho);
+      z-index: 1000;
+    }
+    .logo { font-size: 24px; font-weight: bold; }
+    .logo span { color: var(--vermelho); }
+    .home-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: bold;
+      padding: 6px 12px;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    h1 {
+      color: var(--laranja);
+      margin-bottom: 24px;
+      font-size: 32px;
+    }
+    p {
+      margin-bottom: 16px;
+      font-size: 17px;
+    }
+    footer {
+      background: var(--preto);
+      color: var(--branco);
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
+    <a href="index.html" class="home-link">← Voltar</a>
+  </header>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <h1>Quem Somos</h1>
+      <p>O Portal Notícias é um veículo independente de comunicação fundado em 2025 com o compromisso de levar informação de qualidade, imparcial e acessível a todos os brasileiros.</p>
+      <p>Nossa redação é formada por jornalistas experientes e comprometidos com a ética profissional, a veracidade dos fatos e o direito do cidadão à informação.</p>
+      <p>Atuamos nas áreas de política, economia, cultura, comunidades, eventos e serviços, sempre com foco no interesse público e na diversidade de vozes.</p>
+    </div>
+
+    <footer>
+      &copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.
+    </footer>
+  </div>
+</body>
+</html>

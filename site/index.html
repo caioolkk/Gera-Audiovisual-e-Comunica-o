@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GERA Audiovisual e Comunicação</title>
+  <meta name="description" content="Notícias, entretenimento e comunicação de qualidade.">
+  <meta name="keywords" content="GERA, audiovisual, comunicação, notícias, Brasil">
+  <meta name="author" content="GERA Audiovisual e Comunicação">
+  <link rel="icon" href="https://via.placeholder.com/32x32?text=GERA" type="image/png">
+  
+  <style>
+    /* === RESET E VARIÁVEIS === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --amarelo: #FFD700;
+      --laranja: #FF8C00;
+      --vermelho: #fc520f;
+      --branco: #ffffff;
+      --preto: #000000;
+      --cinza-claro: #f9f9f9;
+      --cinza-medio: #e0e0e0;
+      --sombra: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    html, body {
+      height: 100%;
+    }
+    .page-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .main-container {
+      flex: 1;
+      margin-top: 100px;
+      padding: 0 16px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+    footer {
+      margin-top: auto;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--preto);
+      background-color: var(--branco);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* === CABEÇALHO === */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--branco);
+      z-index: 1000;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--vermelho);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--preto);
+    }
+
+    .logo span {
+      color: var(--vermelho);
+    }
+
+    nav ul {
+      display: flex;
+      gap: 16px;
+    }
+
+    nav a {
+      font-weight: 600;
+      padding: 4px 8px;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: var(--vermelho);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .search-bar input {
+      padding: 8px 12px;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 20px;
+      width: 180px;
+      font-size: 14px;
+    }
+
+    .search-label {
+      color: var(--laranja);
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .header-icons {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .anuncie-link {
+      text-align: center;
+      color: var(--preto);
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .anuncie-icon {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .profile-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--cinza-medio);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .profile-btn:hover {
+      background-color: var(--laranja);
+      border-color: var(--laranja);
+    }
+
+    .profile-btn svg {
+      fill: currentColor;
+      width: 20px;
+      height: 20px;
+    }
+
+    .profile-btn:hover svg {
+      fill: var(--branco);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      position: relative;
+      width: 25px;
+      height: 20px;
+      justify-content: space-between;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: var(--preto);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    /* === DESTAQUE === */
+    .destaque {
+      background-color: var(--cinza-claro);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      cursor: pointer;
+    }
+
+    .destaque img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .destaque h2 {
+      font-size: 28px;
+      margin: 16px 0;
+    }
+
+    /* === FEED DE NOTÍCIAS (RESPONSIVO) === */
+    .noticias-feed {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+      width: 100%;
+    }
+
+    .noticia-card {
+      display: flex;
+      gap: 16px;
+      background-color: var(--branco);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+      transition: transform 0.2s ease;
+      cursor: pointer;
+      flex-direction: column;
+    }
+
+    .noticia-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .noticia-img {
+      width: 100%;
+      height: 160px;
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 769px) {
+      .noticia-card {
+        flex-direction: row;
+      }
+      .noticia-img {
+        width: 200px;
+        height: auto;
+      }
+    }
+
+    .noticia-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .noticia-content {
+      padding: 16px;
+      flex: 1;
+    }
+
+    .categoria-tag {
+      display: inline-block;
+      background-color: var(--laranja);
+      color: var(--branco);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .noticia-content h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .noticia-content p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* === RODAPÉ === */
+    footer {
+      background-color: var(--preto);
+      color: var(--branco);
+      padding: 40px 16px;
+    }
+
+    .footer-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+    }
+
+    .footer-section h3 {
+      margin-bottom: 16px;
+      color: var(--amarelo);
+    }
+
+    .footer-section ul li {
+      margin-bottom: 8px;
+    }
+
+    .footer-section a:hover {
+      color: var(--laranja);
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #333;
+      color: #aaa;
+    }
+
+    /* === RESPONSIVIDADE === */
+    @media (max-width: 768px) {
+      header {
+        padding: 12px;
+      }
+
+      .logo {
+        font-size: 20px;
+      }
+
+      nav ul {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        background: var(--branco);
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: none;
+        z-index: 999;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      .mobile-menu-item {
+        width: 100%;
+        text-align: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--cinza-medio);
+        font-weight: 600;
+      }
+
+      .mobile-menu-item:last-child {
+        border-bottom: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .search-bar {
+        display: none;
+      }
+
+      .header-icons {
+        display: none;
+      }
+
+      .main-container {
+        margin-top: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
+
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <nav id="main-nav">
+      <ul>
+        <li><a href="categoria.html?cat=Cultura">Cultura</a></li>
+        <li><a href="categoria.html?cat=Comunidades">Comunidades</a></li>
+        <li><a href="categoria.html?cat=Política">Política</a></li>
+        <li><a href="categoria.html?cat=Eventos">Eventos</a></li>
+        <li><a href="categoria.html?cat=Serviços">Serviços</a></li>
+      </ul>
+    </nav>
+
+    <div class="search-bar">
+      <span class="search-label" id="search-trigger">Buscar</span>
+      <input type="text" placeholder="Palavra-chave..." id="search-input" />
+    </div>
+
+    <div class="header-icons">
+      <a href="anuncie.html" class="anuncie-link" title="Anuncie Aqui">
+        <span class="anuncie-icon">📢</span>
+        Anuncie Aqui
+      </a>
+      <a href="login.html" class="profile-btn" title="Área do Usuário">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c1.52 0 5.1 1.34 5.1 5v2H6.9v-2c0-3.66 3.58-5 5.1-5z"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <div class="page-wrapper">
+    <div class="main-container">
+      <section class="destaque" id="destaque-section">
+        <div style="text-align: center; padding: 40px; color: #666;">Carregando destaque...</div>
+      </section>
+
+      <section class="noticias-feed" id="noticias-feed">
+        <!-- O conteúdo será preenchido por JavaScript -->
+      </section>
+    </div>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Institucional</h3>
+          <ul>
+            <li><a href="quem-somos.html">Quem Somos</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contato</h3>
+          <ul>
+            <li><a href="mailto:contato@gera.com.br">contato@gera.com.br</a></li>
+            <li>Pernambuco | PE</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Redes Sociais</h3>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        &copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.
+      </div>
+    </footer>
+  </div>
+
+  <script>
+
+    // Alinhar aqui
+    const API_BASE = 'https://backend-gera.onrender.com';
+
+    async function loadDestaque() {
+      const destaqueEl = document.getElementById('destaque-section');
+      try {
+        const res = await fetch(`${API_BASE}/api/destaque`);
+        if (res.ok) {
+          const noticia = await res.json();
+          if (noticia && noticia.id) {
+            destaqueEl.innerHTML = `
+              <img src="${noticia.imagem || 'https://via.placeholder.com/800x300?text=Destaque'}" alt="${noticia.titulo}" />
+              <h2>${noticia.titulo}</h2>
+              <p>${noticia.resumo || ''}</p>
+            `;
+            destaqueEl.onclick = () => window.location = `noticia.html?id=${noticia.id}`;
+          } else {
+            destaqueEl.innerHTML = '<p style="text-align:center;">Nenhum destaque disponível.</p>';
+          }
+        } else {
+          destaqueEl.innerHTML = '<p style="text-align:center;color:red;">Erro ao carregar destaque.</p>';
+        }
+      } catch (err) {
+        console.error('Erro ao carregar destaque:', err);
+        destaqueEl.innerHTML = '<p style="text-align:center;color:red;">Erro de conexão.</p>';
+      }
+    }
+
+    async function loadNewsFeed() {
+      const container = document.getElementById('noticias-feed');
+      try {
+        const res = await fetch(`${API_BASE}/api/noticias`);
+        if (!res.ok) throw new Error('Resposta inválida do servidor');
+        const noticias = await res.json();
+
+        if (!Array.isArray(noticias) || noticias.length === 0) {
+          container.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:30px;color:#666;">Nenhuma notícia disponível no momento.</p>';
+          return;
+        }
+
+        container.innerHTML = '';
+        noticias.forEach(n => {
+          const card = document.createElement('article');
+          card.className = 'noticia-card';
+          card.onclick = () => window.location = `noticia.html?id=${n.id}`;
+          card.innerHTML = `
+            <div class="noticia-img">
+              <img src="${n.imagem || 'https://via.placeholder.com/240x160?text=' + encodeURIComponent(n.categoria)}" alt="${n.titulo}" />
+            </div>
+            <div class="noticia-content">
+              <span class="categoria-tag">${n.categoria}</span>
+              <h3>${n.titulo}</h3>
+              <p>${n.resumo || ''}</p>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error('Erro ao carregar notícias:', err);
+        container.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:30px;color:red;">Erro ao carregar notícias. Verifique sua conexão.</p>';
+      }
+    }
+
+    document.getElementById('search-trigger').addEventListener('click', async () => {
+      const query = document.getElementById('search-input').value.trim();
+      if (!query) return loadNewsFeed();
+
+      const container = document.getElementById('noticias-feed');
+      try {
+        const res = await fetch(`${API_BASE}/api/search?q=${encodeURIComponent(query)}`);
+        const resultados = await res.json();
+        container.innerHTML = '';
+
+        if (!Array.isArray(resultados) || resultados.length === 0) {
+          container.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:30px;">Nenhum resultado encontrado.</p>';
+        } else {
+          resultados.forEach(n => {
+            const card = document.createElement('article');
+            card.className = 'noticia-card';
+            card.onclick = () => window.location = `noticia.html?id=${n.id}`;
+            card.innerHTML = `
+              <div class="noticia-img">
+                <img src="${n.imagem || 'https://via.placeholder.com/240x160?text=' + encodeURIComponent(n.categoria)}" alt="${n.titulo}" />
+              </div>
+              <div class="noticia-content">
+                <span class="categoria-tag">${n.categoria}</span>
+                <h3>${n.titulo}</h3>
+                <p>${n.resumo || ''}</p>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        }
+      } catch (err) {
+        container.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:30px;color:red;">Erro na busca.</p>';
+      }
+    });
+
+    document.getElementById('search-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') document.getElementById('search-trigger').click();
+    });
+
+    // === MENU HAMBURGER ===
+    const hamburger = document.getElementById('hamburger');
+    const nav = document.getElementById('main-nav').querySelector('ul');
+
+    function updateHamburger() {
+      const spans = hamburger.querySelectorAll('span');
+      if (nav.classList.contains('show')) {
+        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+      } else {
+        spans.forEach(span => {
+          span.style.transform = '';
+          span.style.opacity = '';
+        });
+      }
+    }
+
+    function closeMenu() {
+      nav.classList.remove('show');
+      document.querySelectorAll('.mobile-extra').forEach(el => el.remove());
+      updateHamburger();
+    }
+
+    hamburger.addEventListener('click', () => {
+      nav.classList.toggle('show');
+      if (nav.classList.contains('show')) {
+        const searchItem = document.createElement('li');
+        searchItem.className = 'mobile-menu-item mobile-extra';
+        searchItem.innerHTML = `
+          <div style="padding:0 20px;width:100%;">
+            <input type="text" id="mobile-search" placeholder="Buscar notícias..."
+                   style="width:100%;padding:10px;border:1px solid #ddd;border-radius:20px;">
+          </div>
+        `;
+        nav.appendChild(searchItem);
+        
+        const anuncieItem = document.createElement('li');
+        anuncieItem.className = 'mobile-menu-item mobile-extra';
+        anuncieItem.innerHTML = `<a href="anuncie.html">Anuncie Aqui</a>`;
+        nav.appendChild(anuncieItem);
+        
+        const loginItem = document.createElement('li');
+        loginItem.className = 'mobile-menu-item mobile-extra';
+        loginItem.innerHTML = `<a href="login.html">Login / Cadastro</a>`;
+        nav.appendChild(loginItem);
+        
+        document.getElementById('mobile-search').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            const query = e.target.value.trim();
+            if (query) {
+              closeMenu();
+              window.location.href = `categoria.html?busca=${encodeURIComponent(query)}`;
+            }
+          }
+        });
+      } else {
+        document.querySelectorAll('.mobile-extra').forEach(el => el.remove());
+      }
+      updateHamburger();
+    });
+
+    document.addEventListener('click', (e) => {
+      const isClickInsideNav = nav.contains(e.target);
+      const isClickOnHamburger = hamburger.contains(e.target);
+      if (!isClickInsideNav && !isClickOnHamburger && nav.classList.contains('show')) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDestaque();
+      loadNewsFeed();
+    });
+  </script>
+</body>
+</html>
