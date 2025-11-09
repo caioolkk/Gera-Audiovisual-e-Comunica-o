@@ -1,201 +1,271 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anuncie Conosco - GERA Audiovisual e Comunicação</title>
-  <meta name="description" content="Anuncie com a GERA Audiovisual e Comunicação.">
-  <meta name="keywords" content="GERA, anunciar, publicidade, marketing, Brasil">
-  <meta name="author" content="GERA Audiovisual e Comunicação">
-  <link rel="icon" href="https://via.placeholder.com/32x32?text=GERA" type="image/png">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Anuncie - GERA</title>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GERA Audiovisual e Comunicação</title>
 
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GERA Audiovisual e Comunicação</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --amarelo: #FFD700;
-      --laranja: #FF8C00;
-      --vermelho: #fc520f;
-      --branco: #FFFFFF;
-      --preto: #000000;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { 
+      --laranja: #FF8C00; 
+      --vermelho: #fc520f; 
+      --preto: #000; 
+      --branco: #fff; 
+      --cinza-medio: #e0e0e0;
     }
 
-    /* === CORREÇÃO DO FOOTER === */
-    html, body {
-      height: 100%;
-    }
-    .page-wrapper {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    .container {
-      flex: 1;
-      max-width: 600px;
-      margin: 80px auto 0;
-      padding: 30px;
-      background: var(--branco);
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    footer {
-      margin-top: auto;
+    body { 
+      font-family: Segoe UI, Tahoma, sans-serif; 
+      background: var(--branco); 
+      color: var(--preto); 
     }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--cinza-claro);
-      color: var(--preto);
+    /* HEADER */
+    header { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      background: var(--branco); 
+      padding: 16px 20px; /* aumentei o padding */
+      border-bottom: 2px solid var(--vermelho); 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      z-index: 1000; 
     }
-    header {
-      background: var(--branco);
-      padding: 16px 20px;
-      border-bottom: 2px solid var(--vermelho);
+
+    .logo { 
+      font-size: 24px; 
+      font-weight: bold; 
     }
-    .logo { font-size: 24px; font-weight: bold; }
-    .logo span { color: var(--vermelho); }
-    .home-link {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: bold;
-      padding: 6px 12px;
-      border: 1px solid var(--cinza-medio);
-      border-radius: 20px;
-      cursor: pointer;
+
+    .logo span { 
+      color: var(--vermelho); 
     }
-    h1 {
-      color: var(--laranja);
-      margin-bottom: 24px;
-      text-align: center;
+
+    .home-link { 
+      display: flex; 
+      align-items: center; 
+      gap: 6px; 
+      font-weight: bold; 
+      padding: 6px 12px; 
+      border: 1px solid var(--cinza-medio); 
+      border-radius: 20px; 
+      cursor: pointer; 
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s ease;
     }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-    .form-group textarea { height: 120px; resize: vertical; }
-    .btn {
-      width: 100%;
-      padding: 14px;
+
+    .home-link:hover {
       background: var(--laranja);
       color: var(--branco);
-      border: none;
-      border-radius: 6px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
     }
-    .btn:hover { background: var(--vermelho); }
-    .success, .error {
-      text-align: center;
-      padding: 12px;
-      margin: 16px 0;
-      border-radius: 6px;
+
+    /* CONTEÚDO PRINCIPAL */
+    .main { 
+      padding-top: 130px; /* espaçamento entre header e conteúdo */
+      max-width: 900px; 
+      margin: 0 auto; 
+      padding-left: 16px;
+      padding-right: 16px;
     }
-    .success { background: #d4edda; color: #155724; }
-    .error { background: #f8d7da; color: #721c24; }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #666;
+
+    form { 
+      background: #fff; 
+      padding: 18px; 
+      border-radius: 8px; 
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .06); 
+    }
+
+    label { 
+      display: block; 
+      margin-bottom: 8px; 
+      font-weight: 600; 
+    }
+
+    input, textarea, select { 
+      width: 100%; 
+      padding: 10px; 
+      border: 1px solid #ddd; 
+      border-radius: 6px; 
+      margin-bottom: 12px; 
+    }
+
+    button { 
+      background: var(--laranja); 
+      color: #fff; 
+      padding: 10px 14px; 
+      border: none; 
+      border-radius: 6px; 
+      cursor: pointer; 
+    }
+
+    h1, h2, h3 { 
+      text-align: center; 
+      margin-bottom: 20px;
+    }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 768px) { 
+      .hamburger { display: flex; } 
+      nav ul { 
+        position: fixed; 
+        top: 70px; 
+        left: 0; 
+        width: 100%; 
+        display: none; 
+        flex-direction: column; 
+        background: var(--branco);
+        border-top: 1px solid var(--cinza-medio);
+      } 
+      nav ul.show { display: flex; } 
     }
   </style>
 </head>
+
 <body>
   <header>
     <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
-    <a href="index.html" class="home-link">← Voltar para o Portal</a>
+    <a href="https://gera-noticias.vercel.app" class="home-link">← Voltar para o Portal</a>
   </header>
 
-  <div class="page-wrapper">
-    <div class="container">
-      <h1>Anuncie Conosco</h1>
-      <div id="message-container"></div>
-      <form id="anuncio-form">
-        <div class="form-group">
-          <label for="nome">Nome Completo *</label>
-          <input type="text" id="nome" required>
-        </div>
-        <div class="form-group">
-          <label for="empresa">Empresa *</label>
-          <input type="text" id="empresa" required>
-        </div>
-        <div class="form-group">
-          <label for="email">E-mail *</label>
-          <input type="email" id="email" required>
-        </div>
-        <div class="form-group">
-          <label for="telefone">Telefone *</label>
-          <input type="tel" id="telefone" required>
-        </div>
-        <div class="form-group">
-          <label for="tipo">Tipo de Anúncio *</label>
-          <select id="tipo" required>
-            <option value="">Selecione</option>
-            <option value="banner">Banner Lateral</option>
-            <option value="destaque">Notícia em Destaque</option>
-            <option value="patrocinio">Patrocínio de Categoria</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="mensagem">Mensagem *</label>
-          <textarea id="mensagem" placeholder="Descreva seu interesse..." required></textarea>
-        </div>
-        <button type="submit" class="btn">Enviar Solicitação</button>
-      </form>
-    </div>
-
-    <footer>
-      &copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.
-    </footer>
-  </div>
+  <main class="main">
+    <h1>Anuncie Aqui</h1>
+        <form id="anuncio-form">
+      <label for="nome">Nome *</label>
+      <input id="nome" required />
+      <label for="empresa">Empresa *</label>
+      <input id="empresa" required />
+      <label for="email">E-mail *</label>
+      <input id="email" type="email" required />
+      <label for="telefone">Telefone</label>
+      <input id="telefone" />
+      <label for="tipo">Tipo</label>
+      <select id="tipo">
+        <option value="banner">Banner Lateral</option>
+        <option value="destaque">Destaque</option>
+        <option value="patrocinio">Patrocínio</option>
+      </select>
+      <label for="mensagem">Mensagem</label>
+      <textarea id="mensagem" rows="4"></textarea>
+      <button type="submit">Enviar</button>
+      <div id="anuncio-msg" style="margin-top: 12px; color: #666;"></div>
+    </form>
+  </main>
+</body>
 
   <script>
+    const API_BASE = 'https://backend-gera-lrgo.onrender.com';
+
+    async function postJson(path, bodyObj) {
+      try {
+        const res = await fetch(API_BASE.replace(/\/$/, '') + path, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bodyObj)
+        });
+        const ct = res.headers.get('Content-Type') || '';
+        if (!res.ok) {
+          const txt = ct.includes('application/json') ? await res.json() : await res.text();
+          throw new Error((txt && txt.error) ? txt.error : `HTTP ${res.status}`);
+        }
+        if (ct.includes('application/json')) return await res.json();
+        return await res.text();
+      } catch (err) { throw err; }
+    }
+
     document.getElementById('anuncio-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const msgDiv = document.getElementById('message-container');
-      
-      const formData = {
-        nome: document.getElementById('nome').value,
-        empresa: document.getElementById('empresa').value,
-        email: document.getElementById('email').value,
-        telefone: document.getElementById('telefone').value,
+      const msg = document.getElementById('anuncio-msg');
+      msg.style.color = '#666'; 
+      msg.textContent = 'Enviando...';
+      const payload = {
+        nome: document.getElementById('nome').value.trim(),
+        empresa: document.getElementById('empresa').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        telefone: document.getElementById('telefone').value.trim(),
         tipo: document.getElementById('tipo').value,
-        mensagem: document.getElementById('mensagem').value
+        mensagem: document.getElementById('mensagem').value.trim()
       };
-
-      // Alinhar aqui
+      if (!payload.nome || !payload.empresa || !payload.email) {
+        msg.style.color = 'red'; 
+        msg.textContent = 'Preencha os campos obrigatórios.'; 
+        return; 
+      }
       try {
-        const res = await fetch('https://backend-gera.onrender.com/api/add-ad', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
-        
-        if (res.ok) {
-          msgDiv.innerHTML = '<div class="success">Solicitação enviada com sucesso! Entraremos em contato em breve.</div>';
-          document.getElementById('anuncio-form').reset();
-        } else {
-          const error = await res.text();
-          msgDiv.innerHTML = `<div class="error">Erro: ${error || 'Não foi possível enviar.'}</div>`;
-        }
+        await postJson('/api/add-anuncio', payload);
+        msg.style.color = 'green'; 
+        msg.textContent = 'Anúncio enviado com sucesso! Entraremos em contato.';
+        document.getElementById('anuncio-form').reset();
       } catch (err) {
-        msgDiv.innerHTML = '<div class="error">Erro de conexão. Verifique sua internet.</div>';
+        console.error('Erro ao enviar anúncio:', err);
+        msg.style.color = 'red'; 
+        msg.textContent = err.message || 'Erro ao enviar. Tente novamente.';
       }
     });
+
+    // Hamburger menu behavior
+    (function() {
+      const hamburger = document.getElementById('hamburger'); 
+      const navUl = document.querySelector('#main-nav ul'); 
+      if (!hamburger || !navUl) return;
+
+      function addExtras() { 
+        if (navUl.querySelector('.mobile-extra')) return; 
+        const li = document.createElement('li'); 
+        li.className = 'mobile-menu-item mobile-extra'; 
+        li.innerHTML = '<a href="index.html">Início</a>'; 
+        navUl.appendChild(li); 
+      }
+
+      function updateIcon() { 
+        const s = hamburger.querySelectorAll('span'); 
+        if (navUl.classList.contains('show')) { 
+          s[0].style.transform = 'rotate(45deg) translate(5px, 5px)'; 
+          s[1].style.opacity = '0'; 
+          s[2].style.transform = 'rotate(-45deg) translate(5px, -5px)'; 
+        } else { 
+          s.forEach(x => { x.style.transform = ''; x.style.opacity = ''; }); 
+        } 
+      }
+
+      function openMenu() { 
+        navUl.classList.add('show'); 
+        addExtras(); 
+        updateIcon(); 
+      }
+
+      function closeMenu() { 
+        navUl.classList.remove('show'); 
+        navUl.querySelectorAll('.mobile-extra').forEach(e => e.remove()); 
+        updateIcon(); 
+      }
+
+      hamburger.addEventListener('click', (e) => { 
+        e.stopPropagation(); 
+        navUl.classList.contains('show') ? closeMenu() : openMenu(); 
+      });
+
+      document.addEventListener('click', (e) => { 
+        if (!navUl.contains(e.target) && !hamburger.contains(e.target) && navUl.classList.contains('show')) closeMenu(); 
+      });
+
+      window.addEventListener('resize', () => { 
+        if (window.innerWidth > 768 && navUl.classList.contains('show')) closeMenu(); 
+      });
+    })();
   </script>
 </body>
 </html>

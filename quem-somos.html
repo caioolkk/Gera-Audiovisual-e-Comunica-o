@@ -10,19 +10,31 @@
   <link rel="icon" href="https://via.placeholder.com/32x32?text=GERA" type="image/png">
 
   <style>
+    /* Reset e variáveis */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
+    :root{
       --amarelo: #FFD700;
       --laranja: #FF8C00;
       --vermelho: #fc520f;
       --branco: #FFFFFF;
       --preto: #000000;
+      --cinza-claro: #f6f6f6;
+      --cinza-medio: #e0e0e0;
+      --header-height: 68px;
+      --max-width: 940px;
     }
 
-    /* === CORREÇÃO DO FOOTER === */
-    html, body {
-      height: 100%;
+    html, body { height: 100%; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--preto);
+      background: linear-gradient(180deg, #fff 0%, #fbfbfd 100%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
+
+    /* Estrutura da página para footer "stick" */
     .page-wrapper {
       display: flex;
       flex-direction: column;
@@ -30,71 +42,335 @@
     }
     .container {
       flex: 1;
-      max-width: 800px;
-      margin: 120px auto 0;
-      padding: 0 20px;
-    }
-    footer {
-      margin-top: auto;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: calc(var(--header-height) + 28px) 20px 40px; /* espaço para header fixo */
     }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
-      color: var(--preto);
-      background-color: var(--branco);
-    }
+    /* Header fixo com nav responsiva (CSS-only hamburger) */
     header {
       position: fixed;
       top: 0;
-      width: 100%;
-      background: var(--branco);
-      padding: 16px 20px;
-      border-bottom: 2px solid var(--vermelho);
-      z-index: 1000;
-    }
-    .logo { font-size: 24px; font-weight: bold; }
-    .logo span { color: var(--vermelho); }
-    .home-link {
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(4px);
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-weight: bold;
-      padding: 6px 12px;
-      border: 1px solid var(--cinza-medio);
-      border-radius: 20px;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--cinza-medio);
+      z-index: 1000;
+    }
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
+    .logo span { color: var(--laranja); font-weight:700; }
+
+    /* Navegação */
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-link {
+      padding: 8px 12px;
+      border-radius: 18px;
+      text-decoration: none;
+      color: var(--preto);
+      border: 1px solid transparent;
+      font-weight: 600;
+      background: transparent;
+      transition: all .15s ease;
+    }
+    .nav-link:hover { border-color: var(--cinza-medio); background: #fafafa; transform: translateY(-1px); }
+
+    /* Botão voltar */
+    .home-link { 
+      display: flex; 
+      align-items: center; 
+      gap: 6px; 
+      font-weight: bold; 
+      padding: 6px 12px; 
+      border: 1px solid var(--cinza-medio); 
+      border-radius: 20px; 
+      cursor: pointer; 
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s ease;
+    }
+
+    .home-link:hover {
+      background: var(--laranja);
+      color: var(--branco);
+    }
+
+    /* Hamburger (aparece em telas pequenas) */
+    .nav-toggle {
+      display: none;
+    }
+    .hamburger {
+      display: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
+      border: 1px solid var(--cinza-medio);
+      background: #fff;
     }
-    h1 {
+    .hamburger .bar {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: var(--preto);
+      position: relative;
+    }
+    .hamburger .bar::before,
+    .hamburger .bar::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 18px;
+      height: 2px;
+      background: var(--preto);
+    }
+    .hamburger .bar::before { top: -6px; }
+    .hamburger .bar::after  { top: 6px; }
+
+    /* Menu mobile: oculto por padrão, aparece quando checkbox é checked */
+    .mobile-nav {
+      position: fixed;
+      top: var(--header-height);
+      right: 0;
+      left: 0;
+      background: var(--branco);
+      border-bottom: 1px solid var(--cinza-medio);
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px 16px;
+      z-index: 999;
+    }
+
+    /* centralizar títulos h1/h2 */
+    h1, h2 {
+      text-align: center;
       color: var(--laranja);
-      margin-bottom: 24px;
-      font-size: 32px;
+      margin-bottom: 18px;
+      font-size: 34px;
+      line-height: 1.05;
+      word-break: break-word;
     }
-    p {
-      margin-bottom: 16px;
-      font-size: 17px;
+
+    /* Quem Somos: layout mais atraente */
+    .hero {
+      background: linear-gradient(180deg, rgba(255,248,236,1) 0%, rgba(255,250,243,1) 100%);
+      border: 1px solid var(--cinza-medio);
+      border-radius: 12px;
+      padding: 26px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+      margin: 18px 0 26px;
     }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px;
+      border: 1px solid #f0f0f0;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    .lead {
+      font-size: 18.5px;
+      line-height: 1.7;
+      color: #2b2b2b;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+    /* Letra capitular discreta */
+    .lead::first-letter {
+      font-size: 40px;
+      font-weight: 700;
+      float: left;
+      margin-right: 10px;
+      line-height: 1;
+      color: var(--laranja);
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+
+    .details p {
+      margin-bottom: 12px;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .sidebar-image {
+      width: 100%;
+      border-radius: 8px;
+      height: 100%;
+      min-height: 180px;
+      object-fit: cover;
+      background: linear-gradient(135deg,#fffaf0,#fff3e6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c47a00;
+      font-weight: 700;
+      border: 1px dashed #fee8c2;
+    }
+
+    /* Missão / Visão / Valores */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .pill {
+      background: linear-gradient(180deg,#fff 0%,#fffaf3 100%);
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--cinza-medio);
+      text-align: center;
+      font-weight: 600;
+      color: #333;
+      font-size: 14px;
+    }
+    .pill .emoji { font-size: 20px; display:block; margin-bottom:6px; }
+
+    /* Texto geral */
+    p { margin-bottom: 14px; font-size: 16px; color:#333; }
+
     footer {
+      margin-top: auto;
       background: var(--preto);
       color: var(--branco);
       text-align: center;
       padding: 20px;
+      font-size: 14px;
+    }
+
+    /* Responsividade */
+    @media (max-width: 900px) {
+      .content-grid { grid-template-columns: 1fr 260px; }
+    }
+
+    @media (max-width: 720px) {
+      nav { display: none; }
+      .hamburger { display: inline-flex; }
+
+      /* quando o checkbox está marcado, mostra a nav mobile */
+      .nav-toggle:checked ~ .mobile-nav {
+        display: flex;
+      }
+
+      /* transforma o ícone em "X" quando aberto */
+      .nav-toggle:checked + label .bar {
+        background: transparent;
+      }
+      .nav-toggle:checked + label .bar::before {
+        transform: rotate(45deg) translate(4px, 4px);
+      }
+      .nav-toggle:checked + label .bar::after {
+        transform: rotate(-45deg) translate(4px, -4px);
+      }
+
+      .mobile-nav .nav-link {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--cinza-medio);
+      }
+
+      .content-grid { grid-template-columns: 1fr; }
+      .sidebar-image { min-height: 140px; }
+      .grid-3 { grid-template-columns: repeat(1,1fr); }
+      h1 { font-size: 28px; }
+      .lead { font-size: 17px; }
+    }
+
+    @media (min-width: 721px) {
+      .mobile-nav { display: none !important; }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
-    <a href="index.html" class="home-link">← Voltar</a>
+    <div class="brand">
+      <div class="logo">GERA<span> Audiovisual</span></div>
+    </div>
+
+    <!-- Navegação desktop -->
+    <nav aria-label="Navegação principal">
+      <a href="https://gera-noticias.vercel.app" class="home-link">← Voltar para o Portal</a>
+      <a href="categoria.html" class="nav-link">Serviços</a>
+    </nav>
+
+    <!-- Checkbox + label para hamburger (CSS-only) -->
+    <input id="nav-toggle" class="nav-toggle" type="checkbox" aria-hidden="true">
+    <label for="nav-toggle" class="hamburger" aria-hidden="true" title="Abrir menu">
+      <span class="bar" aria-hidden="true"></span>
+    </label>
+
+    <!-- Menu mobile (aparece quando checkbox está marcado) -->
+    <div class="mobile-nav" role="menu" aria-label="Menu móvel">
+      <a href="https://gera-noticias.vercel.app" class="nav-link home-link" role="menuitem">← Voltar</a>
+      <a href="categoria.html" class="nav-link" role="menuitem">Serviços</a>
+    </div>
   </header>
 
   <div class="page-wrapper">
-    <div class="container">
+    <main class="container">
       <h1>Quem Somos</h1>
-      <p>O Portal Notícias é um veículo independente de comunicação fundado em 2025 com o compromisso de levar informação de qualidade, imparcial e acessível a todos os brasileiros.</p>
-      <p>Nossa redação é formada por jornalistas experientes e comprometidos com a ética profissional, a veracidade dos fatos e o direito do cidadão à informação.</p>
-      <p>Atuamos nas áreas de política, economia, cultura, comunidades, eventos e serviços, sempre com foco no interesse público e na diversidade de vozes.</p>
-    </div>
+
+      <section class="hero card" aria-labelledby="quem-somos">
+        <div class="content-grid">
+          <div>
+            <p class="lead" id="quem-somos">
+              Fundada para aproximar pessoas e histórias, a GERA Audiovisual e Comunicação produz conteúdo com propósito: informar, conectar e transformar. Atuamos com jornalismo, produção audiovisual e estratégias de comunicação para projetos que buscam impacto real na comunidade.
+            </p>
+
+            <div class="details">
+              <p>Nossa equipe reúne jornalistas, produtores e criativos que valorizam a clareza, a ética e a criatividade em cada trabalho. Priorizamos processos colaborativos e soluções sob medida, sempre com atenção à qualidade visual e à precisão da informação.</p>
+
+              <p>Além da cobertura editorial, desenvolvemos peças institucionais, documentários curtos e campanhas digitais, entregando conteúdos pensados para cada público e plataforma.</p>
+            </div>
+
+            <div class="grid-3" aria-hidden="false">
+              <div class="pill"><span class="emoji">🎯</span>Missão<br><small>Informar com responsabilidade</small></div>
+              <div class="pill"><span class="emoji">🔭</span>Visão<br><small>Ser referência em qualidade e ética</small></div>
+              <div class="pill"><span class="emoji">🤝</span>Valores<br><small>Transparência, impacto e diversidade</small></div>
+            </div>
+          </div>
+
+          <aside>
+            <div class="sidebar-image" role="img" aria-label="Imagem ilustrativa de equipe">
+              <div>Imagem da equipe • Placeholder</div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Texto complementar fora do hero -->
+      <section class="card" style="margin-bottom:18px;">
+        <h2 style="margin-top:0;">Nossa abordagem</h2>
+        <p>Trabalhamos integrando apuração rigorosa e linguagem audiovisual, criando narrativas que fazem sentido para o público. Cada projeto nasce de um diagnóstico e é executado com foco em resultado e durabilidade.</p>
+        <p>Se você busca produzir conteúdo com impacto, entre em contato. Gostamos de conversar, entender contexto e entregar mais do que um produto — entregamos experiência.</p>
+      </section>
+    </main>
 
     <footer>
       &copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.

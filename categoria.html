@@ -39,35 +39,47 @@
       background-color: var(--branco);
     }
     a { text-decoration: none; color: inherit; }
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: var(--branco);
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid var(--vermelho);
-      z-index: 1000;
+    header { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      background: var(--branco); 
+      padding: 16px 20px; /* aumentei o padding */
+      border-bottom: 2px solid var(--vermelho); 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      z-index: 1000; 
     }
     .logo { font-size: 24px; font-weight: bold; }
     .logo span { color: var(--vermelho); }
-    .home-link {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: bold;
-      padding: 6px 12px;
-      border: 1px solid var(--cinza-medio);
-      border-radius: 20px;
-      cursor: pointer;
+
+    .home-link { 
+      display: flex; 
+      align-items: center; 
+      gap: 6px; 
+      font-weight: bold; 
+      padding: 6px 12px; 
+      border: 1px solid var(--cinza-medio); 
+      border-radius: 20px; 
+      cursor: pointer; 
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s ease;
     }
+
+    .home-link:hover {
+      background: var(--laranja);
+      color: var(--branco);
+    }
+
     .categoria-header { margin-bottom: 30px; }
     .categoria-titulo {
       font-size: 32px;
       color: var(--laranja);
       margin-bottom: 10px;
+      text-align: center; /* ✅ Centralizado */
     }
 
     .noticias-grid {
@@ -145,7 +157,7 @@
 <body>
   <header>
     <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
-    <a href="index.html" class="home-link">← Voltar</a>
+    <a href="https://gera-noticias.vercel.app" class="home-link">← Voltar para o Portal</a>
   </header>
 
   <div class="page-wrapper">
@@ -159,46 +171,94 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const cat = new URLSearchParams(window.location.search).get('cat');
+    const API_BASE = 'https://backend-gera-lrgo.onrender.com';
+
+    async function fetchJsonSafe(paths, opts = {}) {
+      const defaults = {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-store',
+        headers: { 'Accept': 'application/json' }
+      };
+      const options = Object.assign({}, defaults, opts);
+      let lastErr = null;
+      for (const p of paths) {
+        const url = p.startsWith('http') ? p : API_BASE.replace(/\/$/, '') + p;
+        try {
+          const res = await fetch(url, options);
+          if (res.status === 204) return null;
+          const ct = res.headers.get('Content-Type') || '';
+          if (!res.ok) { lastErr = new Error(`HTTP ${res.status}`); continue; }
+          if (ct.includes('application/json')) return await res.json();
+          const text = await res.text();
+          try { return JSON.parse(text); } catch { return text; }
+        } catch (err) { lastErr = err; continue; }
+      }
+      throw lastErr || new Error('Falha na conexão.');
+    }
+
+    function buildImageUrl(src) {
+      if (!src) return null;
+      if (/^https?:\/\//i.test(src)) return src;
+      if (src.startsWith('/')) return API_BASE.replace(/\/$/, '') + src;
+      return API_BASE.replace(/\/$/, '') + '/' + src;
+    }
+
+    function getParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+
+    async function loadNoticias() {
+      const cat = getParam('cat') || getParam('busca');
+      const nomeEl = document.getElementById('categoria-nome');
+      const container = document.getElementById('noticias-container');
+
       if (!cat) {
-        document.getElementById('categoria-nome').textContent = 'Categoria não especificada';
-        document.getElementById('noticias-container').innerHTML = '<div class="error">Nenhuma categoria selecionada.</div>';
+        nomeEl.textContent = 'Categoria não especificada';
+        container.innerHTML = '<div class="error">Nenhuma categoria selecionada.</div>';
         return;
       }
-      document.getElementById('categoria-nome').textContent = cat;
 
-      // Alinhar aqui
-      
+      nomeEl.textContent = decodeURIComponent(cat);
+      container.innerHTML = '<div class="loading">Carregando notícias...</div>';
+
       try {
-        const res = await fetch(`https://backend-gera.onrender.com/api/noticias?categoria=${encodeURIComponent(cat)}`);
-        const noticias = await res.json();
-        const container = document.getElementById('noticias-container');
-        if (!noticias.length) {
-          container.innerHTML = `<div class="error">Nenhuma notícia em "${cat}".</div>`;
-        } else {
-          container.innerHTML = '';
-          noticias.forEach(n => {
-            const card = document.createElement('article');
-            card.className = 'noticia-card';
-            card.onclick = () => location.href = `noticia.html?id=${n.id}`;
-            card.innerHTML = `
-              <div class="noticia-img">
-                <img src="${n.imagem || 'https://via.placeholder.com/240x160?text=' + encodeURIComponent(cat)}" alt="${n.titulo}" onerror="this.src='https://via.placeholder.com/240x160?text=Sem+Imagem'" />
-              </div>
-              <div class="noticia-content">
-                <span class="categoria-tag">${n.categoria}</span>
-                <h3>${n.titulo}</h3>
-                <p>${n.resumo || 'Sem resumo.'}</p>
-              </div>
-            `;
-            container.appendChild(card);
-          });
+        const data = await fetchJsonSafe([
+          `/api/noticias?categoria=${encodeURIComponent(cat)}`,
+          `/api/news?categoria=${encodeURIComponent(cat)}`
+        ]);
+
+        if (!Array.isArray(data) || data.length === 0) {
+          container.innerHTML = `<div class="error">Nenhuma notícia encontrada em "${cat}".</div>`;
+          return;
         }
-      } catch {
-        document.getElementById('noticias-container').innerHTML = '<div class="error">Erro ao carregar notícias.</div>';
+
+        container.innerHTML = '';
+        data.forEach(n => {
+          const img = n.imagem ? buildImageUrl(n.imagem) : `https://via.placeholder.com/240x160?text=${encodeURIComponent(cat)}`;
+          const card = document.createElement('article');
+          card.className = 'noticia-card';
+          card.onclick = () => location.href = `noticia.html?id=${n.id}`;
+          card.innerHTML = `
+            <div class="noticia-img">
+              <img src="${img}" alt="${n.titulo || 'Notícia'}" onerror="this.src='https://via.placeholder.com/240x160?text=Sem+Imagem'"/>
+            </div>
+            <div class="noticia-content">
+              <span class="categoria-tag">${n.categoria || cat}</span>
+              <h3>${n.titulo || 'Sem título'}</h3>
+              <p>${n.resumo || 'Sem resumo disponível.'}</p>
+            </div>`;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error('Erro ao carregar notícias:', err);
+        container.innerHTML = '<div class="error">Erro ao carregar notícias. Tente novamente mais tarde.</div>';
       }
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadNoticias);
   </script>
 </body>
 </html>

@@ -51,16 +51,26 @@
     }
     .logo { font-size: 24px; font-weight: bold; }
     .logo span { color: var(--vermelho); }
-    .home-link {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: bold;
-      padding: 6px 12px;
-      border: 1px solid var(--cinza-medio);
-      border-radius: 20px;
-      cursor: pointer;
+
+    .home-link { 
+      display: flex; 
+      align-items: center; 
+      gap: 6px; 
+      font-weight: bold; 
+      padding: 6px 12px; 
+      border: 1px solid var(--cinza-medio); 
+      border-radius: 20px; 
+      cursor: pointer; 
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.2s ease;
     }
+
+    .home-link:hover {
+      background: var(--laranja);
+      color: var(--branco);
+    }
+
     .categoria-tag {
       display: inline-block;
       background: var(--laranja);
@@ -74,11 +84,13 @@
       font-size: 32px;
       margin-bottom: 16px;
       line-height: 1.3;
+      text-align: center; /* ✅ centralizado */
     }
     .noticia-data {
       color: #666;
       margin-bottom: 20px;
       font-style: italic;
+      text-align: center;
     }
     .noticia-imagem {
       width: 100%;
@@ -115,7 +127,7 @@
 <body>
   <header>
     <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
-    <a href="index.html" class="home-link">← Voltar</a>
+    <a href="https://gera-noticias.vercel.app" class="home-link">← Voltar para o Portal</a>
   </header>
 
   <div class="page-wrapper">
@@ -128,30 +140,87 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const id = new URLSearchParams(window.location.search).get('id');
+    const API_BASE = 'https://backend-gera-lrgo.onrender.com';
+
+    async function fetchJsonSafe(paths, opts = {}) {
+      const defaults = {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-store',
+        headers: { 'Accept': 'application/json' }
+      };
+      const options = Object.assign({}, defaults, opts);
+      let lastErr = null;
+      for (const p of paths) {
+        const url = p.startsWith('http') ? p : API_BASE.replace(/\/$/, '') + p;
+        try {
+          const res = await fetch(url, options);
+          if (res.status === 204) return null;
+          const ct = res.headers.get('Content-Type') || '';
+          if (!res.ok) { lastErr = new Error(`HTTP ${res.status}`); continue; }
+          if (ct.includes('application/json')) return await res.json();
+          const text = await res.text();
+          try { return JSON.parse(text); } catch { return text; }
+        } catch (err) { lastErr = err; continue; }
+      }
+      throw lastErr || new Error('Falha na conexão.');
+    }
+
+    function buildImageUrl(src) {
+      if (!src) return null;
+      if (/^https?:\/\//i.test(src)) return src;
+      if (src.startsWith('/')) return API_BASE.replace(/\/$/, '') + src;
+      return API_BASE.replace(/\/$/, '') + '/' + src;
+    }
+
+    function getQueryParam(name) {
+      const u = new URL(location.href);
+      return u.searchParams.get(name);
+    }
+
+    async function loadNoticia() {
+      const id = getQueryParam('id');
+      const conteudo = document.getElementById('noticia-conteudo');
+
       if (!id) {
-        document.getElementById('noticia-conteudo').innerHTML = '<div class="error">ID não fornecido.</div>';
+        conteudo.innerHTML = '<div class="error">ID não fornecido.</div>';
         return;
       }
 
-      // Alinhar aqui
-      
       try {
-        const res = await fetch(`https://backend-gera.onrender.com/api/noticia?id=${id}`);
-        const noticia = await res.json();
-        if (!noticia.id) throw new Error();
-        document.getElementById('noticia-conteudo').innerHTML = `
-          <div class="categoria-tag">${noticia.categoria}</div>
-          <h1 class="noticia-titulo">${noticia.titulo}</h1>
-          <div class="noticia-data">${noticia.data || 'Data não disponível'}</div>
-          <img src="${noticia.imagem || 'https://via.placeholder.com/800x400?text=Sem+Imagem'}" alt="${noticia.titulo}" class="noticia-imagem" onerror="this.src='https://via.placeholder.com/800x400?text=Sem+Imagem'">
-          <div class="noticia-corpo">${noticia.corpo || '<p>Conteúdo não disponível.</p>'}</div>
+        const noticia = await fetchJsonSafe([
+          `/api/noticia?id=${encodeURIComponent(id)}`,
+          `/api/news/${encodeURIComponent(id)}`,
+          `/api/news?id=${encodeURIComponent(id)}`
+        ]);
+
+        if (!noticia || (!noticia.titulo && !noticia.title)) {
+          conteudo.innerHTML = '<div class="error">Notícia não encontrada.</div>';
+          return;
+        }
+
+        const titulo = noticia.titulo || noticia.title || 'Sem título';
+        const resumo = noticia.resumo || noticia.summary || '';
+        const corpo = noticia.corpo || noticia.content || noticia.body || '<p>Conteúdo não disponível.</p>';
+        const categoria = noticia.categoria || 'Notícia';
+        const data = noticia.data || 'Data não disponível';
+        const img = noticia.imagem ? buildImageUrl(noticia.imagem) : 'https://via.placeholder.com/800x400?text=Sem+Imagem';
+
+        conteudo.innerHTML = `
+          <div class="categoria-tag">${categoria}</div>
+          <h1 class="noticia-titulo">${titulo}</h1>
+          <div class="noticia-data">${data}</div>
+          <img src="${img}" alt="${titulo}" class="noticia-imagem" onerror="this.src='https://via.placeholder.com/800x400?text=Sem+Imagem'">
+          <div class="noticia-corpo">${corpo}</div>
         `;
-      } catch {
-        document.getElementById('noticia-conteudo').innerHTML = '<div class="error">Erro ao carregar notícia.</div>';
+      } catch (err) {
+        console.error('Erro ao carregar notícia:', err);
+        conteudo.innerHTML = '<div class="error">Erro ao carregar notícia.</div>';
       }
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadNoticia);
   </script>
 </body>
 </html>
