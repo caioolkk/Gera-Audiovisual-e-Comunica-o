@@ -8,296 +8,473 @@
   <meta name="keywords" content="GERA, audiovisual, comunicação, notícias, Brasil">
   <meta name="author" content="GERA Audiovisual e Comunicação">
   <link rel="icon" href="https://via.placeholder.com/32x32?text=GERA" type="image/png">
-  
+
   <style>
+    /* RESET */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    :root {
-      --amarelo: #FFD700;
-      --laranja: #FF8C00;
-      --vermelho: #fc520f;
-      --branco: #ffffff;
-      --preto: #000000;
-      --cinza-claro: #f9f9f9;
-      --cinza-medio: #e0e0e0;
-      --sombra: 0 2px 8px rgba(0,0,0,0.1);
+    :root{
+      --amarelo:#FFD700;
+      --laranja:#FF8C00;
+      --vermelho:#fc520f;
+      --branco:#ffffff;
+      --preto:#000000;
+      --cinza-claro:#f9f9f9;
+      --cinza-medio:#e0e0e0;
+      --sombra:0 2px 8px rgba(0,0,0,0.1);
     }
 
-    html, body { height: 100%; }
-    body {
+    html,body{height:100%;}
+    body{
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
-      color: var(--preto);
-      background-color: var(--branco);
+      line-height:1.6;
+      color:var(--preto);
+      background-color:var(--branco);
     }
 
-    h1, h2, h3 { text-align: center; }
+    a{ text-decoration:none; color:inherit; }
+    ul{ list-style:none; }
+    img{ max-width:100%; height:auto; }
 
-    .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
-    .main-container {
-      flex: 1;
-      margin-top: 100px;
-      padding: 0 16px;
-      max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
-      width: 100%;
+    /* LAYOUT GERAL */
+    .page-wrapper{ display:flex; flex-direction:column; min-height:100vh; }
+    .main-container{
+      flex:1;
+      margin-top:100px;
+      padding:0 16px;
+      max-width:1200px;
+      margin-left:auto;
+      margin-right:auto;
+      width:100%;
     }
-    footer { margin-top: auto; }
+    footer{ margin-top:auto; }
 
-    a { text-decoration: none; color: inherit; }
-    ul { list-style: none; }
-    img { max-width: 100%; height: auto; }
+    h1,h2,h3{text-align:center;}
 
-    header {
-      position: fixed;
-      top: 0; left: 0; width: 100%;
-      background-color: var(--branco);
-      z-index: 1000;
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid var(--vermelho);
-    }
-
-    .logo { font-size: 24px; font-weight: bold; color: var(--preto); }
-    .logo span { color: var(--vermelho); }
-
-    nav ul { display: flex; gap: 16px; }
-    nav a { font-weight: 600; padding: 4px 8px; font-size: 15px; }
-    nav a:hover { color: var(--vermelho); }
-
-    .search-bar { display: flex; align-items: center; gap: 8px; }
-    .search-bar input {
-      padding: 8px 12px; border: 1px solid var(--cinza-medio);
-      border-radius: 20px; width: 180px; font-size: 14px;
+    /* CABEÇALHO */
+    header{
+      position:fixed;
+      top:0; left:0;
+      width:100%;
+      background-color:var(--branco);
+      z-index:1000;
+      padding:12px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:2px solid var(--vermelho);
     }
 
-    .search-label { color: var(--laranja); font-weight: bold; cursor: pointer; }
-    .header-icons { display: flex; align-items: center; gap: 16px; }
+    .logo{ font-size:24px; font-weight:bold; color:var(--preto); }
+    .logo span{ color:var(--vermelho); }
 
-    .anuncie-link { text-align: center; color: var(--preto); font-weight: bold; font-size: 12px; }
-    .anuncie-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+    nav ul{ display:flex; gap:16px; }
+    nav a{ font-weight:600; padding:4px 8px; font-size:15px; }
+    nav a:hover{ color:var(--vermelho); }
 
-    .profile-btn {
-      display: flex; align-items: center; justify-content: center;
-      width: 40px; height: 40px; border: 1px solid var(--cinza-medio);
-      border-radius: 50%; cursor: pointer; transition: all 0.2s ease;
+    .search-bar{ display:flex; align-items:center; gap:8px; }
+    .search-bar input{
+      padding:8px 12px;
+      border:1px solid var(--cinza-medio);
+      border-radius:20px;
+      width:180px;
+      font-size:14px;
     }
-    .profile-btn:hover { background-color: var(--laranja); border-color: var(--laranja); }
-    .profile-btn svg { fill: currentColor; width: 20px; height: 20px; }
-    .profile-btn:hover svg { fill: var(--branco); }
+    .search-label{ color:var(--laranja); font-weight:bold; cursor:pointer; }
 
-    .hamburger {
-      display: none; flex-direction: column; cursor: pointer;
-      width: 25px; height: 20px; justify-content: space-between;
-    }
-    .hamburger span {
-      display: block; width: 100%; height: 3px;
-      background: var(--preto); border-radius: 2px; transition: all 0.3s ease;
-    }
+    .header-icons{ display:flex; align-items:center; gap:16px; }
+    .anuncie-link{ text-align:center; color:var(--preto); font-weight:bold; font-size:12px; }
+    .anuncie-icon{ font-size:20px; display:block; margin-bottom:4px; }
 
-    .destaque {
-      background-color: var(--cinza-claro);
-      padding: 20px; border-radius: 8px;
-      margin-bottom: 30px; cursor: pointer;
+    .profile-btn{
+      display:flex; align-items:center; justify-content:center;
+      width:40px; height:40px; border:1px solid var(--cinza-medio);
+      border-radius:50%; cursor:pointer; transition:all .2s ease;
     }
-    .destaque img { width: 100%; height: 300px; object-fit: cover; border-radius: 8px; }
-    .destaque h2 { font-size: 28px; margin: 16px 0; }
+    .profile-btn:hover{ background-color:var(--laranja); border-color:var(--laranja); }
+    .profile-btn svg{ fill:currentColor; width:20px; height:20px; }
+    .profile-btn:hover svg{ fill:var(--branco); }
 
-    .noticias-feed {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 24px; width: 100%;
+    /* HAMBURGER (visível em mobile) */
+    .hamburger{
+      display:none;
+      flex-direction:column;
+      cursor:pointer;
+      width:25px; height:20px; justify-content:space-between;
     }
-
-    .noticia-card {
-      display: flex; gap: 16px;
-      background-color: var(--branco);
-      border-radius: 8px; overflow: hidden;
-      box-shadow: var(--sombra);
-      transition: transform 0.2s ease;
-      cursor: pointer; flex-direction: column;
-    }
-    .noticia-card:hover { transform: translateY(-4px); }
-
-    .noticia-img { width: 100%; height: 160px; flex-shrink: 0; }
-    @media (min-width: 769px) {
-      .noticia-card { flex-direction: row; }
-      .noticia-img { width: 200px; height: auto; }
-    }
-    .noticia-img img { width: 100%; height: 100%; object-fit: cover; }
-
-    .noticia-content { padding: 16px; flex: 1; }
-    .categoria-tag {
-      display: inline-block;
-      background-color: var(--laranja);
-      color: var(--branco);
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      margin-bottom: 8px;
-    }
-    .noticia-content h3 { font-size: 18px; margin-bottom: 8px; line-height: 1.3; }
-    .noticia-content p { font-size: 14px; color: #666; }
-
-    footer {
-      background-color: var(--preto);
-      color: var(--branco);
-      padding: 40px 16px;
+    .hamburger span{
+      display:block; width:100%; height:3px;
+      background:var(--preto); border-radius:2px; transition:all .3s ease;
     }
 
-    .footer-content {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 30px;
+    /* OVERLAY MENU (FULLSCREEN) */
+    .overlay{
+      position:fixed; top:0; left:0;
+      width:100%; height:100%;
+      background:var(--branco);
+      display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+      z-index:9999; overflow-y:auto;
+      opacity:0; pointer-events:none; transform:translateY(-20px);
+      transition:opacity .4s ease, transform .4s ease;
+    }
+    .overlay.active{ opacity:1; pointer-events:auto; transform:translateY(0); }
+
+    .overlay-header{
+      width:100%; display:flex; justify-content:space-between; align-items:center;
+      padding:20px; border-bottom:2px solid var(--vermelho);
     }
 
-    .footer-section h3 { margin-bottom: 16px; color: var(--amarelo); }
-    .footer-section ul li { margin-bottom: 8px; }
-    .footer-section a:hover { color: var(--laranja); }
+    .close-btn{ font-size:1.8rem; cursor:pointer; font-weight:bold; transition:transform .2s ease; }
+    .close-btn:hover{ transform:rotate(90deg); }
 
-    .copyright {
-      text-align: center; margin-top: 30px;
-      padding-top: 20px; border-top: 1px solid #333; color: #aaa;
+    .overlay-menu{
+      display:flex; flex-direction:column; align-items:center; width:100%; margin-top:20px;
+    }
+    .overlay-menu a{
+      margin:12px 0; font-size:1.05rem; font-weight:500; color:var(--preto); transition:color .2s;
+    }
+    .overlay-menu a:hover{ color:var(--vermelho); }
+
+    .search-box{ margin:20px 0; width:80%; max-width:400px; }
+    .search-box input{
+      width:100%; padding:10px 15px; border:1px solid var(--cinza-medio); border-radius:25px; outline:none;
     }
 
-    @media (max-width: 768px) {
-      header { padding: 12px; }
-      .logo { font-size: 20px; }
-      nav ul {
-        position: fixed; top: 70px; left: 0; background: var(--branco);
-        width: 100%; flex-direction: column; align-items: center;
-        padding: 20px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        display: none; z-index: 999;
-      }
-      nav ul.show { display: flex; }
-      .mobile-menu-item {
-        width: 100%; text-align: center; padding: 12px 0;
-        border-bottom: 1px solid var(--cinza-medio); font-weight: 600;
-      }
-      .mobile-menu-item:last-child { border-bottom: none; }
-      .hamburger { display: flex; }
-      .search-bar { display: none; }
-      .header-icons { display: none; }
-      .main-container { margin-top: 120px; }
+    .extra-links{ width:100%; border-top:1px solid var(--cinza-medio); border-bottom:1px solid var(--cinza-medio); padding:20px 0; text-align:center; }
+    .extra-links a{ display:block; margin:10px 0; color:var(--preto); transition:color .2s; }
+    .extra-links a:hover{ color:var(--vermelho); }
+
+    .social{ margin:20px 0; text-align:center; }
+    .social a{ display:block; color:var(--preto); margin:5px 0; transition:color .2s; }
+    .social a:hover{ color:var(--vermelho); }
+
+    /* DESTAQUE E FEED */
+    .destaque{ background-color:var(--cinza-claro); padding:20px; border-radius:8px; margin-bottom:30px; cursor:pointer; }
+    .destaque img{ width:100%; height:300px; object-fit:cover; border-radius:8px; }
+    .destaque h2{ font-size:28px; margin:16px 0; }
+
+    .noticias-feed{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+      gap:24px; width:100%;
+    }
+
+    .noticia-card{
+      display:flex; gap:16px; background-color:var(--branco);
+      border-radius:8px; overflow:hidden; box-shadow:var(--sombra);
+      transition:transform .2s ease; cursor:pointer; flex-direction:column;
+    }
+    .noticia-card:hover{ transform:translateY(-4px); }
+
+    .noticia-img{ width:100%; height:160px; flex-shrink:0; }
+    @media(min-width:769px){
+      .noticia-card{ flex-direction:row; }
+      .noticia-img{ width:200px; height:auto; }
+    }
+    .noticia-img img{ width:100%; height:100%; object-fit:cover; }
+
+    .noticia-content{ padding:16px; flex:1; }
+    .categoria-tag{
+      display:inline-block; background-color:var(--laranja); color:var(--branco);
+      padding:4px 8px; border-radius:4px; font-size:12px; margin-bottom:8px;
+    }
+    .noticia-content h3{ font-size:18px; margin-bottom:8px; line-height:1.3; }
+    .noticia-content p{ font-size:14px; color:#666; }
+
+    /* RODAPÉ */
+    footer{
+      background-color:var(--preto); color:var(--branco); padding:40px 16px;
+    }
+    .footer-content{
+      max-width:1000px; margin:0 auto; display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:30px;
+    }
+    .footer-section h3{ margin-bottom:16px; color:var(--amarelo); }
+    .footer-section ul li{ margin-bottom:8px; }
+    .footer-section a:hover{ color:var(--laranja); }
+    .copyright{ text-align:center; margin-top:30px; padding-top:20px; border-top:1px solid #333; color:#aaa; }
+
+    /* RESPONSIVIDADE */
+    @media(max-width:768px){
+      header{ padding:12px; }
+      .logo{ font-size:20px; }
+      nav ul{ display:none; } /* desktop nav escondida em telas pequenas */
+      .search-bar{ display:none; }
+      .header-icons{ display:none; }
+      .hamburger{ display:flex; } /* hamburger visível em mobile */
+      .main-container{ margin-top:120px; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
-  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-  <nav id="main-nav">
-    <ul>
-      <li><a href="categoria.html?cat=Cultura">Cultura</a></li>
-      <li><a href="categoria.html?cat=Comunidades">Comunidades</a></li>
-      <li><a href="categoria.html?cat=Política">Política</a></li>
-      <li><a href="categoria.html?cat=Eventos">Eventos</a></li>
-      <li><a href="categoria.html?cat=Serviços">Serviços</a></li>
-    </ul>
-  </nav>
-  <div class="search-bar">
-    <span class="search-label" id="search-trigger">Buscar</span>
-    <input type="text" placeholder="Palavra-chave..." id="search-input" />
-  </div>
-  <div class="header-icons">
-    <a href="anuncie.html" class="anuncie-link"><span class="anuncie-icon">📢</span>Anuncie Aqui</a>
-    <a href="login.html" class="profile-btn">
-      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c1.52 0 5.1 1.34 5.1 5v2H6.9v-2c0-3.66 3.58-5 5.10-5z"/></svg>
-    </a>
-  </div>
-</header>
+  <!-- Cabeçalho (desktop: nav visível; mobile: hamburger) -->
+  <header>
+    <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
 
-<div class="page-wrapper">
-  <div class="main-container">
-    <section class="destaque" id="destaque-section">
-      <div style="text-align: center; padding: 40px; color: #666;">Carregando destaque...</div>
-    </section>
+    <!-- Desktop nav -->
+    <nav id="main-nav">
+      <ul>
+        <li><a href="categoria.html?cat=Cultura">Cultura</a></li>
+        <li><a href="categoria.html?cat=Comunidades">Comunidades</a></li>
+        <li><a href="categoria.html?cat=Política">Política</a></li>
+        <li><a href="categoria.html?cat=Eventos">Eventos</a></li>
+        <li><a href="categoria.html?cat=Serviços">Serviços</a></li>
+      </ul>
+    </nav>
 
-    <section class="noticias-feed" id="noticias-feed"></section>
-  </div>
-
-  <footer>
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>Institucional</h3>
-        <ul><li><a href="quem-somos.html">Quem Somos</a></li></ul>
+    <!-- Search e icons (desktop) -->
+    <div style="display:flex; align-items:center; gap:16px;">
+      <div class="search-bar">
+        <span class="search-label" id="search-trigger">Buscar</span>
+        <input type="text" placeholder="Palavra-chave..." id="search-input" />
       </div>
-      <div class="footer-section">
-        <h3>Contato</h3>
-        <ul><li><a href="mailto:contato@gera.com.br">contato@gera.com.br</a></li><li>Pernambuco | PE</li></ul>
-      </div>
-      <div class="footer-section">
-        <h3>Redes Sociais</h3>
-        <ul><li><a href="#">Instagram</a></li><li><a href="#">YouTube</a></li></ul>
+
+      <div class="header-icons">
+        <a href="anuncie.html" class="anuncie-link" title="Anuncie Aqui">
+          <span class="anuncie-icon">📢</span>
+          Anuncie Aqui
+        </a>
+
+        <a href="login.html" class="profile-btn" title="Área do Usuário">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c1.52 0 5.1 1.34 5.1 5v2H6.9v-2c0-3.66 3.58-5 5.1-5z"/>
+          </svg>
+        </a>
       </div>
     </div>
-    <div class="copyright">&copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.</div>
-  </footer>
-</div>
 
-<script>
-const API_BASE = 'https://backend-gera-lrgo.onrender.com';
-async function fetchJsonSafe(paths=[],options={}) {
-  const defaultOpts={method:'GET',mode:'cors',cache:'no-store',headers:{'Accept':'application/json'}};
-  const opts=Object.assign({},defaultOpts,options);
-  for(const p of paths){
-    const url=p.startsWith('http')?p:`${API_BASE}${p}`;
-    try{
-      const res=await fetch(url,opts);
-      if(res.ok){
-        const ct=res.headers.get('Content-Type')||'';
-        return ct.includes('json')?await res.json():await res.text();
-      }
-    }catch(e){continue;}
-  }
-}
-function buildImageUrl(src){
-  if(!src)return null;
-  if(/^https?:\/\//.test(src))return src;
-  if(src.startsWith('/'))return API_BASE.replace(/\/$/,'')+src;
-  return API_BASE.replace(/\/$/,'')+'/'+src;
-}
-async function loadDestaque(){
-  const el=document.getElementById('destaque-section');
-  try{
-    const d=await fetchJsonSafe(['/api/destaque','/api/featured']);
-    if(d&&d.titulo){
-      const img=d.imagem?buildImageUrl(d.imagem):'https://via.placeholder.com/800x300?text=Destaque';
-      el.innerHTML=`<img src="${img}" alt=""><h2>${d.titulo}</h2><p>${d.resumo||''}</p>`;
-      el.onclick=()=>window.location=`noticia.html?id=${d.id}`;
-    } else el.innerHTML='<p style="text-align:center;">Nenhum destaque disponível.</p>';
-  }catch{el.innerHTML='<p style="text-align:center;color:red;">Erro ao carregar destaque.</p>';}
-}
-async function loadNewsFeed(){
-  const c=document.getElementById('noticias-feed');
-  try{
-    const n=await fetchJsonSafe(['/api/news','/api/noticias']);
-    if(!n?.length){c.innerHTML='<p style="text-align:center;">Nenhuma notícia disponível.</p>';return;}
-    c.innerHTML='';
-    n.forEach(v=>{
-      const img=v.imagem?buildImageUrl(v.imagem):'https://via.placeholder.com/240x160?text='+encodeURIComponent(v.categoria||'Notícia');
-      const card=document.createElement('article');
-      card.className='noticia-card';
-      card.innerHTML=`<div class="noticia-img"><img src="${img}"></div><div class="noticia-content"><span class="categoria-tag">${v.categoria||''}</span><h3>${v.titulo}</h3><p>${v.resumo||''}</p></div>`;
-      card.onclick=()=>window.location=`noticia.html?id=${v.id}`;
-      c.appendChild(card);
+    <!-- Hamburger (mobile) -->
+    <div class="hamburger" id="openMenu" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <!-- MENU OVERLAY (mobile style) -->
+  <div class="overlay" id="menuOverlay" aria-hidden="true">
+    <div class="overlay-header">
+      <div class="logo">GERA<span> Audiovisual e Comunicação</span></div>
+      <div class="close-btn" id="closeMenu" aria-label="Fechar menu">&times;</div>
+    </div>
+
+    <div class="overlay-menu" role="navigation">
+      <a href="categoria.html?cat=Cultura">Cultura</a>
+      <a href="categoria.html?cat=Comunidades">Comunidades</a>
+      <a href="categoria.html?cat=Política">Política</a>
+      <a href="categoria.html?cat=Eventos">Eventos</a>
+      <a href="categoria.html?cat=Serviços">Serviços</a>
+
+      <div class="search-box">
+        <input type="text" placeholder="Buscar notícias..." id="search-input-overlay" />
+      </div>
+
+      <div class="extra-links">
+        <a href="anuncie.html">Anuncie Aqui</a>
+        <a href="login.html">Login / Cadastro</a>
+      </div>
+
+      <div class="social">
+        <a href="#">Instagram</a>
+        <a href="#">YouTube</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="page-wrapper">
+    <div class="main-container">
+      <section class="destaque" id="destaque-section">
+        <div style="text-align:center; padding:40px; color:#666;">Carregando destaque...</div>
+      </section>
+
+      <section class="noticias-feed" id="noticias-feed"></section>
+    </div>
+
+    <!-- RODAPÉ -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Institucional</h3>
+          <ul><li><a href="quem-somos.html">Quem Somos</a></li></ul>
+        </div>
+
+        <div class="footer-section">
+          <h3>Contato</h3>
+          <ul>
+            <li><a href="mailto:contato@gera.com.br">contato@gera.com.br</a></li>
+            <li>Pernambuco | PE</li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h3>Redes Sociais</h3>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="copyright">&copy; 2025 GERA Audiovisual e Comunicação. Todos os direitos reservados.</div>
+    </footer>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    /* MENU OVERLAY */
+    const openMenu = document.getElementById('openMenu');
+    const closeMenu = document.getElementById('closeMenu');
+    const menuOverlay = document.getElementById('menuOverlay');
+
+    openMenu.addEventListener('click', () => {
+      menuOverlay.classList.add('active');
+      menuOverlay.setAttribute('aria-hidden','false');
+      // bloquear scroll do body quando overlay ativo
+      document.body.style.overflow = 'hidden';
+      // foco no campo de busca do overlay (se existir)
+      const so = document.getElementById('search-input-overlay');
+      if(so) so.focus();
     });
-  }catch{c.innerHTML='<p style="text-align:center;color:red;">Erro ao carregar notícias.</p>';}
-}
-document.addEventListener('DOMContentLoaded',()=>{loadDestaque();loadNewsFeed();});
-const h=document.getElementById('hamburger'),u=document.querySelector('#main-nav ul');
-h.addEventListener('click',e=>{e.stopPropagation();u.classList.toggle('show');});
-document.addEventListener('click',e=>{if(!u.contains(e.target)&&!h.contains(e.target))u.classList.remove('show');});
-document.getElementById('search-trigger').addEventListener('click',()=>{
-  const q=document.getElementById('search-input').value.trim();
-  if(q)window.location=`categoria.html?busca=${encodeURIComponent(q)}`;
-});
-</script>
+
+    function closeOverlay(){
+      menuOverlay.classList.remove('active');
+      menuOverlay.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+      // devolve foco ao botão hamburger
+      openMenu.focus();
+    }
+
+    closeMenu.addEventListener('click', closeOverlay);
+
+    // fecha clicando fora do conteúdo (overlay)
+    menuOverlay.addEventListener('click', (e) => {
+      if (e.target === menuOverlay) closeOverlay();
+    });
+
+    // fecha com ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menuOverlay.classList.contains('active')) closeOverlay();
+    });
+
+    /* ==== RESTANTE DO SEU SCRIPT ORIGINAL (API, destaque, feed, busca) ==== */
+    const API_BASE = 'https://backend-gera-lrgo.onrender.com';
+
+    async function fetchJsonSafe(paths = [], options = {}) {
+      const defaultOpts = {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-store',
+        headers: { 'Accept': 'application/json' }
+      };
+      const opts = Object.assign({}, defaultOpts, options);
+      for (const p of paths) {
+        const url = p.startsWith('http') ? p : `${API_BASE}${p}`;
+        try {
+          const res = await fetch(url, opts);
+          if (res.ok) {
+            const ct = res.headers.get('Content-Type') || '';
+            return ct.includes('json') ? await res.json() : await res.text();
+          }
+        } catch (e) {
+          // tenta próximo endpoint
+          continue;
+        }
+      }
+      // se falhar, retorna null
+      return null;
+    }
+
+    function buildImageUrl(src) {
+      if (!src) return null;
+      if (/^https?:\/\//.test(src)) return src;
+      if (src.startsWith('/')) return API_BASE.replace(/\/$/, '') + src;
+      return API_BASE.replace(/\/$/, '') + '/' + src;
+    }
+
+    async function loadDestaque() {
+      const el = document.getElementById('destaque-section');
+      try {
+        const d = await fetchJsonSafe(['/api/destaque', '/api/featured']);
+        if (d && d.titulo) {
+          const img = d.imagem ? buildImageUrl(d.imagem) : 'https://via.placeholder.com/800x300?text=Destaque';
+          el.innerHTML = `
+            <img src="${img}" alt="">
+            <h2>${d.titulo}</h2>
+            <p>${d.resumo || ''}</p>
+          `;
+          el.onclick = () => window.location = `noticia.html?id=${d.id}`;
+        } else {
+          el.innerHTML = '<p style="text-align:center;">Nenhum destaque disponível.</p>';
+        }
+      } catch (err) {
+        el.innerHTML = '<p style="text-align:center;color:red;">Erro ao carregar destaque.</p>';
+      }
+    }
+
+    async function loadNewsFeed() {
+      const c = document.getElementById('noticias-feed');
+      try {
+        const n = await fetchJsonSafe(['/api/news', '/api/noticias']);
+        if (!n || !n.length) {
+          c.innerHTML = '<p style="text-align:center;">Nenhuma notícia disponível.</p>';
+          return;
+        }
+        c.innerHTML = '';
+        n.forEach(v => {
+          const img = v.imagem ? buildImageUrl(v.imagem) : 'https://via.placeholder.com/240x160?text=' + encodeURIComponent(v.categoria || 'Notícia');
+          const card = document.createElement('article');
+          card.className = 'noticia-card';
+          card.innerHTML = `
+            <div class="noticia-img"><img src="${img}" alt=""></div>
+            <div class="noticia-content">
+              <span class="categoria-tag">${v.categoria || ''}</span>
+              <h3>${v.titulo}</h3>
+              <p>${v.resumo || ''}</p>
+            </div>
+          `;
+          card.onclick = () => window.location = `noticia.html?id=${v.id}`;
+          c.appendChild(card);
+        });
+      } catch (err) {
+        c.innerHTML = '<p style="text-align:center;color:red;">Erro ao carregar notícias.</p>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDestaque();
+      loadNewsFeed();
+
+      // comportamento do search no cabeçalho
+      const searchTrigger = document.getElementById('search-trigger');
+      if (searchTrigger) {
+        searchTrigger.addEventListener('click', () => {
+          const q = document.getElementById('search-input').value.trim();
+          if (q) window.location = `categoria.html?busca=${encodeURIComponent(q)}`;
+        });
+      }
+
+      // busca dentro do overlay (enter)
+      const overlayInput = document.getElementById('search-input-overlay');
+      if (overlayInput) {
+        overlayInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const q = overlayInput.value.trim();
+            if (q) window.location = `categoria.html?busca=${encodeURIComponent(q)}`;
+          }
+        });
+      }
+
+      // também permite Enter no header input
+      const headerInput = document.getElementById('search-input');
+      if (headerInput) {
+        headerInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const q = headerInput.value.trim();
+            if (q) window.location = `categoria.html?busca=${encodeURIComponent(q)}`;
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
